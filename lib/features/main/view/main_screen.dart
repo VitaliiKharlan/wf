@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_forecast/features/details/view/details_screen.dart';
 import 'package:weather_forecast/features/theme/app.images.dart';
 import 'package:weather_forecast/features/theme/app_text_style.dart';
 
@@ -93,10 +94,24 @@ class DetailsInfoWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const SizedBox(height: 20),
-        Text(
-          'Montreal',
-          style: AppTextStyle.defaultRegularLargeTitle
-              .copyWith(color: Colors.white),
+        ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const DetailsScreen()),
+            );
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            shape:
+                const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+          ),
+          child: Text(
+            'Montreal',
+            style: AppTextStyle.defaultRegularLargeTitle
+                .copyWith(color: Colors.white),
+          ),
         ),
         Text(
           '19\u00B0',

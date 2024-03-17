@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import '../widgets/air_quality_details_widget.dart';
+import '../widgets/hourly_weekly_details.dart';
+import '../widgets/main_details_widget.dart';
+import '../widgets/parameters_details_widget.dart';
 
 class DetailsScreen extends StatefulWidget {
   const DetailsScreen({super.key});
@@ -10,6 +14,22 @@ class DetailsScreen extends StatefulWidget {
 class _DetailsScreenState extends State<DetailsScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      backgroundColor: const Color(0xFF2E335A),
+
+      body: ListView(
+        physics: const BouncingScrollPhysics(),
+        children: const [
+          MainDetailsWidget(),
+          SizedBox(height: 24),
+          HourlyWeeklyDetailsWidget(),
+          SizedBox(height: 24),
+          AirQualityDetailsWidget(),
+          SizedBox(height: 24),
+          ParametersDetailsWidget(),
+        ],
+      ),
+    );
   }
 }
+

@@ -39,6 +39,46 @@ abstract class AppTextStyle {
   );
 
 
+  static const defaultThinTitle3 = TextStyle(
+    fontFamily: 'SF Pro Display',
+    fontSize: 20,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.w100,
+    height: 1.0,
+    letterSpacing: 0.0,
+  );
+
+
+  static const defaultRegularTitle3 = TextStyle(
+    fontFamily: 'SF Pro Display',
+    fontSize: 20,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.w400,
+    height: 1.0,
+    letterSpacing: 0.0,
+  );
+
+  static const defaultSemiBoldTitle3 = TextStyle(
+    fontFamily: 'SF Pro Display',
+    fontSize: 20,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.w600,
+    height: 1.0,
+    letterSpacing: 0.0,
+  );
+
+  static const defaultBoldTitle3 = TextStyle(
+    fontFamily: 'SF Pro Display',
+    fontSize: 20,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.w700,
+    height: 1.0,
+    letterSpacing: 0.0,
+  );
+
+
+
+
 
 
   static const bodySupplementary = TextStyle(
