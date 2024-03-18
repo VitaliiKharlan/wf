@@ -16,6 +16,7 @@ class MainDetailsWidget extends StatelessWidget {
             style: AppTextStyle.defaultRegularLargeTitle
                 .copyWith(color: Colors.white),
           ),
+          const SizedBox(height: 4),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

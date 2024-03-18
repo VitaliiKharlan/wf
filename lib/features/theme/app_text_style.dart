@@ -76,6 +76,15 @@ abstract class AppTextStyle {
     letterSpacing: 0.0,
   );
 
+  static const labelColorDarkSecondary = TextStyle(
+    fontFamily: 'SF Pro Display',
+    fontSize: 15,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.w600,
+    height: 1.0,
+    letterSpacing: 0.0,
+  );
+
 
 
 

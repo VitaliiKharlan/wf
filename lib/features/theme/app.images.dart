@@ -12,4 +12,31 @@ abstract class AppImages {
       'assets/images/background_main_image.png';
   static const String backgroundHouseImage =
       'assets/images/background_house_image.png';
+
+  static const String separatorDetailsScreen =
+      'assets/images/separator_details_screen.png';
+  static const String shapeDetailsScreen =
+      'assets/images/shape_details_screen.png';
+  static const String hourlyDetailsScreen =
+      'assets/images/hourly_details_screen.png';
+
+  static const String airQualityMediumDetailsScreen =
+      'assets/images/air_quality_medium_widget_details_screen.png';
+
+  static const String uvIndexBottomWidgetDetailsScreen =
+      'assets/images/uv_index_bottom_widget_details_screen.png';
+  static const String sunriseBottomWidgetDetailsScreen =
+      'assets/images/sunrise_bottom_widget_details_screen.png';
+  static const String windBottomWidgetDetailsScreen =
+      'assets/images/wind_bottom_widget_details_screen.png';
+  static const String rainfallBottomWidgetDetailsScreen =
+      'assets/images/rainfall_bottom_widget_details_screen.png';
+  static const String feelsLikeBottomWidgetDetailsScreen =
+      'assets/images/feels_like_bottom_widget_details_screen.png';
+  static const String humidityBottomWidgetDetailsScreen =
+      'assets/images/humidity_bottom_widget_details_screen.png';
+  static const String visibilityBottomWidgetDetailsScreen =
+      'assets/images/visibility_bottom_widget_details_screen.png';
+  static const String pressureBottomWidgetDetailsScreen =
+      'assets/images/pressure_bottom_widget_details_screen.png';
 }

@@ -20,12 +20,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
       body: ListView(
         physics: const BouncingScrollPhysics(),
         children: const [
+          SizedBox(height: 8),
           MainDetailsWidget(),
           SizedBox(height: 24),
           HourlyWeeklyDetailsWidget(),
-          SizedBox(height: 24),
+          SizedBox(height: 8),
           AirQualityDetailsWidget(),
-          SizedBox(height: 24),
+          SizedBox(height: 12),
           ParametersDetailsWidget(),
         ],
       ),
