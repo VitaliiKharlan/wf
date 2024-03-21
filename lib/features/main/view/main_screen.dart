@@ -3,6 +3,9 @@ import 'package:weather_forecast/features/details/view/details_screen.dart';
 import 'package:weather_forecast/features/theme/app.images.dart';
 import 'package:weather_forecast/features/theme/app_text_style.dart';
 
+import 'package:weather_forecast/repositories/weather_details/models/city_coordinate.dart';
+import '../../../repositories/weather_details/weather_forecast_repository.dart';
+
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -19,6 +22,8 @@ class _MainScreenState extends State<MainScreen> {
       _selectedTab = index;
     });
   }
+
+  List<CityCoordinate>? _cityCoordinate;
 
   @override
   Widget build(BuildContext context) {
@@ -47,12 +52,22 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ],
           onTap: onSelectTab),
-      body: const Stack(
-        children: [
-          BackgroundWidget(),
-          HouseWidget(),
-          DetailsInfoWidget(),
-        ],
+      body: (_cityCoordinate == null)
+          ? const SizedBox()
+          : const Stack(
+              children: [
+                BackgroundWidget(),
+                HouseWidget(),
+                DetailsInfoWidget(),
+              ],
+            ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          _cityCoordinate =
+              await WeatherForecastRepository().getCityCoordinate();
+          setState(() {});
+        },
+        child: const Icon(Icons.download),
       ),
     );
   }
@@ -90,6 +105,7 @@ class DetailsInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // List<CityCoordinate>? _cityCoordinate;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
