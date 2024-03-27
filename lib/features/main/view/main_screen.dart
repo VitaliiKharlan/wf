@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:weather_forecast/features/details/view/details_screen.dart';
+import 'package:weather_forecast/features/main/view/nav_bar_model.dart';
+import 'package:weather_forecast/features/main/view/nav_bar.dart';
 import 'package:weather_forecast/features/theme/app.images.dart';
 import 'package:weather_forecast/features/theme/app_text_style.dart';
-
 import 'package:weather_forecast/repositories/weather_details/models/city_coordinate.dart';
+
 import '../../../repositories/weather_details/weather_forecast_repository.dart';
 
 class MainScreen extends StatefulWidget {
@@ -14,7 +18,14 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  final homeNavKey = GlobalKey<NavigatorState>();
+  final searchNavKey = GlobalKey<NavigatorState>();
+  final notificationNavKey = GlobalKey<NavigatorState>();
+  final profileNavKey = GlobalKey<NavigatorState>();
   int _selectedTab = 0;
+  List<NavBarModel> items = [];
+
+  List<CityCoordinate>? _cityCoordinates;
 
   void onSelectTab(int index) {
     if (_selectedTab == index) return;
@@ -23,7 +34,21 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  List<CityCoordinate>? _cityCoordinate;
+  @override
+  void initState() {
+    _loadWeatherForecast();
+    super.initState();
+    items = [
+      NavBarModel(
+        page: const TabPage(tab: 1),
+        navKey: homeNavKey,
+      ),
+      NavBarModel(
+        page: const TabPage(tab: 2),
+        navKey: searchNavKey,
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,42 +59,82 @@ class _MainScreenState extends State<MainScreen> {
         iconTheme: const IconThemeData(color: Colors.white),
         title: const Text('Weather Forecast'),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.lightBlueAccent,
-          currentIndex: _selectedTab,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-              ),
-              label: 'Main',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.tv_outlined,
-              ),
-              label: 'Details',
-            ),
-          ],
-          onTap: onSelectTab),
-      body: (_cityCoordinate == null)
-          ? const SizedBox()
-          : const Stack(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Container(
+        margin: const EdgeInsets.only(top: 10),
+        height: 80,
+        width: 80,
+        child: FloatingActionButton(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          onPressed: () => debugPrint('Add Button pressed'),
+          shape: RoundedRectangleBorder(
+            side: const BorderSide(width: 4, color: Colors.green),
+            borderRadius: BorderRadius.circular(100),
+          ),
+          child: const Icon(
+            Icons.add,
+            color: Colors.green,
+          ),
+        ),
+      ),
+      bottomNavigationBar: NavBar(
+        pageIndex: _selectedTab,
+        onTap: (index) {
+          if (index == _selectedTab) {
+            items[index]
+                .navKey
+                .currentState
+                ?.popUntil((route) => route.isFirst);
+          } else {
+            setState(() {
+              _selectedTab = index;
+            });
+          }
+        },
+      ),
+      // (
+      //     backgroundColor: Colors.lightBlueAccent,
+      //     currentIndex: _selectedTab,
+      //     items: const [
+      //       BottomNavigationBarItem(
+      //         icon: Icon(
+      //           Icons.home,
+      //         ),
+      //         label: 'Main',
+      //       ),
+      //       BottomNavigationBarItem(
+      //         icon: Icon(
+      //           Icons.tv_outlined,
+      //         ),
+      //         label: 'Details',
+      //       ),
+      //     ],
+      //     onTap: onSelectTab),
+      body: (_cityCoordinates == null)
+          ? const Center(child: CircularProgressIndicator())
+          : Stack(
               children: [
-                BackgroundWidget(),
-                HouseWidget(),
-                DetailsInfoWidget(),
+                const BackgroundWidget(),
+                const HouseWidget(),
+                DetailsInfoWidget(cityCoordinate: _cityCoordinates!.first),
               ],
             ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          _cityCoordinate =
-              await WeatherForecastRepository().getCityCoordinate();
-          setState(() {});
-        },
-        child: const Icon(Icons.download),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () async {
+      //     _cityCoordinate =
+      //     await WeatherForecastRepository().getCityCoordinate();
+      //     setState(() {});
+      //   },
+      //   child: const Icon(Icons.download),
+      // ),
     );
+  }
+
+  Future<void> _loadWeatherForecast() async {
+    _cityCoordinates = await WeatherForecastRepository().getCityCoordinate();
+    // print(_cityCoordinate);
+    setState(() {});
   }
 }
 
@@ -101,11 +166,18 @@ class HouseWidget extends StatelessWidget {
 }
 
 class DetailsInfoWidget extends StatelessWidget {
-  const DetailsInfoWidget({super.key});
+  const DetailsInfoWidget({
+    super.key,
+    required this.cityCoordinate,
+  });
+
+  final CityCoordinate cityCoordinate;
 
   @override
   Widget build(BuildContext context) {
-    // List<CityCoordinate>? _cityCoordinate;
+    final cityName = cityCoordinate.name.toString();
+    final countryName = cityCoordinate.country.toString().toUpperCase();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -124,7 +196,7 @@ class DetailsInfoWidget extends StatelessWidget {
                 const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
           ),
           child: Text(
-            'Montreal',
+            '$cityName, $countryName',
             style: AppTextStyle.defaultRegularLargeTitle
                 .copyWith(color: Colors.white),
           ),
@@ -171,6 +243,189 @@ class DetailsInfoWidget extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+// extension StringExtension on String {
+//   String capitalize() {
+//     return "${this[0].toUpperCase()}${this.substring(1).toLowerCase()}";
+//   }
+// }
+
+class _BottomNavigationBar extends StatefulWidget {
+  final int onTap;
+
+  const _BottomNavigationBar({
+    required this.onTap,
+  });
+
+  @override
+  State<_BottomNavigationBar> createState() => _BottomNavigationBarState();
+}
+
+class _BottomNavigationBarState extends State<_BottomNavigationBar> {
+  int _selectedTab = 0;
+  int pageIndex = 0;
+
+  // final Function(int) onTap;
+
+  void onSelectTab(int index) {
+    if (_selectedTab == index) return;
+    setState(() {
+      _selectedTab = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        bottom: Platform.isAndroid ? 16 : 0,
+      ),
+      child: BottomAppBar(
+        elevation: 0.0,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            height: 60,
+            color: Colors.green,
+            child: Row(
+              children: [
+                navItem(
+                  Icons.home_outlined,
+                  pageIndex == 0,
+                  // onTap: () => onTap(0),
+                ),
+                navItem(
+                  Icons.notifications_outlined,
+                  pageIndex == 1,
+                  // onTap: () => onTap(0),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+    // BottomNavigationBar(
+    //   backgroundColor: Colors.lightBlueAccent,
+    //   currentIndex: _selectedTab,
+    //   items: const [
+    //     BottomNavigationBarItem(
+    //       icon: Icon(
+    //         Icons.home,
+    //       ),
+    //       label: 'Main',
+    //     ),
+    //     BottomNavigationBarItem(
+    //       icon: Icon(
+    //         Icons.tv_outlined,
+    //       ),
+    //       label: 'Details',
+    //     ),
+    //   ],
+    //   onTap: onSelectTab);
+  }
+}
+
+Widget navItem(IconData icon, bool selected, {Function()? onTap}) {
+  return Expanded(
+    child: InkWell(
+      onTap: onTap,
+      child: Icon(
+        icon,
+        color: selected ? Colors.white : Colors.white24,
+      ),
+    ),
+  );
+}
+
+// class _BottomNavigationBar extends StatelessWidget {
+//   const _BottomNavigationBar({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     int _selectedTab = 0;
+//
+//     void onSelectTab(int index) {
+//       if (_selectedTab == index) return;
+//       setState(() {
+//         _selectedTab = index;
+//       });
+//     }
+//
+//     return BottomNavigationBar(
+//         backgroundColor: Colors.lightBlueAccent,
+//         currentIndex: _selectedTab,
+//         items: const [
+//           BottomNavigationBarItem(
+//             icon: Icon(
+//               Icons.home,
+//             ),
+//             label: 'Main',
+//           ),
+//           BottomNavigationBarItem(
+//             icon: Icon(
+//               Icons.tv_outlined,
+//             ),
+//             label: 'Details',
+//           ),
+//         ],
+//         onTap: onSelectTab);
+//   }
+// }
+
+class TabPage extends StatelessWidget {
+  final int tab;
+
+  const TabPage({
+    super.key,
+    required this.tab,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Tab $tab')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Tab $tab'),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => Page(tab: tab),
+                  ),
+                );
+              },
+              child: const Text('Go to page'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Page extends StatelessWidget {
+  final int tab;
+
+  const Page({
+    super.key,
+    required this.tab,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Page Tab $tab')),
+      body: Center(child: Text('Tab $tab')),
     );
   }
 }
