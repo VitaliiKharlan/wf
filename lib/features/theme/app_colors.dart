@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 
 abstract class AppColors {
+  static const Color solidHourlyButtonShort1 = Color(0xFF48319D);
+
+
+
+
+
+
   // Primary
   static const Color primaryMain = Color(0xFF243482);
   static const Color primaryLight = Color(0xFF99A2EE);

@@ -72,6 +72,15 @@ flutter:
         - asset: assets/fonts/sfProDisplay/bold.otf
           weight: 700
 
+    - family: SF Pro Text
+      fonts:
+        - asset: assets/fonts/sfProText/regular.ttf
+          weight: 400
+        - asset: assets/fonts/sfProText/semiBold.ttf
+          weight: 600
+        - asset: assets/fonts/sfProText/bold.ttf
+          weight: 700
+
 
 
 

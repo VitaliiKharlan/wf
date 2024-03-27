@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:weather_forecast/features/theme/app.images.dart';
+import 'package:weather_forecast/features/theme/app_colors.dart';
 import 'package:weather_forecast/features/theme/app_text_style.dart';
+import 'package:weather_forecast/repositories/weather_details/models/weather_forecast_details.dart';
 
 class HourlyWeeklyDetailsWidget extends StatelessWidget {
-  const HourlyWeeklyDetailsWidget({super.key});
+  final WeatherForecastDetails? weatherForecastDetails;
+
+  const HourlyWeeklyDetailsWidget({
+    super.key,
+    required this.weatherForecastDetails,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +49,7 @@ class HourlyWeeklyDetailsWidget extends StatelessWidget {
               ),
             ],
           ),
-          const _HourlyForecastWidget(),
+          _HourlyForecastWidget(weatherForecastDetails: weatherForecastDetails),
         ],
       ),
     );
@@ -50,12 +57,16 @@ class HourlyWeeklyDetailsWidget extends StatelessWidget {
 }
 
 class _HourlyForecastWidget extends StatelessWidget {
-  const _HourlyForecastWidget();
+  final WeatherForecastDetails? weatherForecastDetails;
+
+  const _HourlyForecastWidget({
+    required this.weatherForecastDetails,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: SizedBox(
         height: 180,
         // width: 540,
@@ -65,10 +76,87 @@ class _HourlyForecastWidget extends StatelessWidget {
           itemCount: 24,
           itemExtent: 72,
           itemBuilder: (BuildContext context, int index) {
-            return const Image(
-              image: AssetImage(AppImages.hourlyDetailsScreen),
-            );
+            return _HourlyForecastItemWidget(
+                weatherForecastDetails: weatherForecastDetails);
           },
+        ),
+      ),
+    );
+  }
+}
+
+class _HourlyForecastItemWidget extends StatelessWidget {
+  final WeatherForecastDetails? weatherForecastDetails;
+
+  const _HourlyForecastItemWidget({
+    required this.weatherForecastDetails,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final temp = weatherForecastDetails?.main.temp;
+    final tempRound = temp?.toStringAsFixed(0).toString();
+
+    final clouds = weatherForecastDetails?.clouds.all.toString();
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: AppColors.solidHourlyButtonShort1.withOpacity(0.2),
+          border: Border.all(color: Colors.black.withOpacity(0.2)),
+          borderRadius: const BorderRadius.all(Radius.circular(24)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 8,
+              offset: const Offset(4, 2),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(8.0),
+          ),
+          clipBehavior: Clip.hardEdge,
+          child: Column(
+            children: [
+              const SizedBox(height: 16),
+              Text(
+                '12 AM',
+                style: AppTextStyle.defaultTextDarkRegular
+                    .copyWith(color: Colors.white),
+              ),
+              const SizedBox(height: 12),
+              const Image(
+                image: AssetImage(AppImages.smallIconMoonCloudFastWind),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 8),
+                      Text(
+                        '$clouds%',
+                        style: AppTextStyle.defaultTextDarkRegular
+                            .copyWith(color: Colors.white),
+                        maxLines: 1,
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        '$tempRound\u00B0',
+                        style: AppTextStyle.defaultTextDarkRegular
+                            .copyWith(color: Colors.white),
+                        maxLines: 1,
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

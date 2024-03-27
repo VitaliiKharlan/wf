@@ -39,4 +39,15 @@ abstract class AppImages {
       'assets/images/visibility_bottom_widget_details_screen.png';
   static const String pressureBottomWidgetDetailsScreen =
       'assets/images/pressure_bottom_widget_details_screen.png';
+
+  static const String smallIconMoonCloudFastWind =
+      'assets/icons/small_icon_moon_cloud_fast_wind.png';
+  static const String smallIconMoonCloudMidRain =
+      'assets/icons/small_icon_moon_cloud_fast_wind.png';
+  static const String smallIconTornado =
+      'assets/icons/small_icon_moon_cloud_fast_wind.png';
+  static const String smallIconSunCloudAngledRain =
+      'assets/icons/small_icon_sun_cloud_angled_rain.png';
+  static const String smallIconSunCloudMidRain =
+      'assets/icons/small_icon_sun_cloud_mid_rain.png';
 }

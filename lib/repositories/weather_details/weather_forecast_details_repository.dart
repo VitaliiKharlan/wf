@@ -13,12 +13,12 @@ const url = '$_host$_lat$_lon$_units$_appID$_apiKey';
 class WeatherForecastDetailsRepository {
   Future<WeatherForecastDetails> getWeatherForecastDetails() async {
     final response = await Dio().get(url);
-    print(response);
+    // print(response);
 
     final data = response.data as Map<String, dynamic>;
-    print(data);
+    // print(data);
     final weatherForecastDetailsList = WeatherForecastDetails.fromJson(data);
-    print(weatherForecastDetailsList);
+    // print(weatherForecastDetailsList);
 
     return weatherForecastDetailsList;
   }

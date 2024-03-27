@@ -6,11 +6,33 @@ part 'weather_forecast_details.g.dart';
 class WeatherForecastDetails {
   WeatherForecastDetails({
     required this.coord,
+    required this.weather,
+    required this.base,
     required this.main,
+    required this.visibility,
+    required this.wind,
+    required this.clouds,
+    required this.dt,
+    required this.sys,
+    required this.timezone,
+    required this.id,
+    required this.name,
+    required this.cod,
   });
 
   final Coord coord;
+  final List<Weather> weather;
+  final String base;
   final Main main;
+  final int visibility;
+  final Wind wind;
+  final Clouds clouds;
+  final int dt;
+  final Sys sys;
+  final int timezone;
+  final int id;
+  final String name;
+  final int cod;
 
   factory WeatherForecastDetails.fromJson(Map<String, dynamic> json) =>
       _$WeatherForecastDetailsFromJson(json);
@@ -19,7 +41,21 @@ class WeatherForecastDetails {
 
   @override
   String toString() {
-    return 'WeatherForecastDetails{coord: $coord, main: $main}';
+    return 'WeatherForecastDetails{'
+        'coord: $coord, '
+        'weather: $weather, '
+        'base: $base, '
+        'main: $main, '
+        'visibility: $visibility, '
+        'wind: $wind, '
+        'clouds: $clouds, '
+        'dt: $dt, '
+        'sys: $sys, '
+        'timezone: $timezone, '
+        'id: $id, '
+        'name: $name, '
+        'cod: $cod, '
+        '}';
   }
 }
 
@@ -39,24 +75,57 @@ class Coord {
 
   @override
   String toString() {
-    return 'Coord{lon: $lon, lat: $lat}';
+    return 'Coord{'
+        'lon: $lon, '
+        'lat: $lat '
+        '}';
+  }
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
+class Weather {
+  final int id;
+  final String main;
+  final String description;
+  final String icon;
+
+  Weather({
+    required this.id,
+    required this.main,
+    required this.description,
+    required this.icon,
+  });
+
+  factory Weather.fromJson(Map<String, dynamic> json) =>
+      _$WeatherFromJson(json);
+
+  Map<String, dynamic> toJson() => _$WeatherToJson(this);
+
+  @override
+  String toString() {
+    return 'Weather{'
+        'id: $id, '
+        'main: $main, '
+        'description: $description, '
+        'icon: $icon,'
+        '}';
   }
 }
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class Main {
   final double temp;
-  final double feels_like;
-  final double temp_min;
-  final double temp_max;
+  final double feelsLike;
+  final double tempMin;
+  final double tempMax;
   final int pressure;
   final int humidity;
 
   Main({
     required this.temp,
-    required this.feels_like,
-    required this.temp_min,
-    required this.temp_max,
+    required this.feelsLike,
+    required this.tempMin,
+    required this.tempMax,
     required this.pressure,
     required this.humidity,
   });
@@ -67,52 +136,91 @@ class Main {
 
   @override
   String toString() {
-    return 'Main{temp: $temp, feels_like: $feels_like, temp_min: $temp_min, temp_max: $temp_max, pressure: $pressure, humidity: $humidity}';
+    return 'Main{'
+        'temp: $temp, '
+        'feelsLike: $feelsLike, '
+        'tempMin: $tempMin, '
+        'tempMax: $tempMax, '
+        'pressure: $pressure, '
+        'humidity: $humidity, '
+        '}';
   }
 }
 
-//
-// {
-// "coord": {
-// "lon": 30.5236,
-// "lat": 50.45
-// },
-// "weather": [
-// {
-// "id": 804,
-// "main": "Clouds",
-// "description": "overcast clouds",
-// "icon": "04n"
-// }
-// ],
-// "base": "stations",
-// "main": {
-// "temp": 5.96,
-// "feels_like": 5.96,
-// "temp_min": 4.04,
-// "temp_max": 7.93,
-// "pressure": 1002,
-// "humidity": 84
-// },
-// "visibility": 10000,
-// "wind": {
-// "speed": 0.89,
-// "deg": 257,
-// "gust": 2.68
-// },
-// "clouds": {
-// "all": 100
-// },
-// "dt": 1711297198,
-// "sys": {
-// "type": 2,
-// "id": 2003742,
-// "country": "UA",
-// "sunrise": 1711252276,
-// "sunset": 1711297008
-// },
-// "timezone": 7200,
-// "id": 696050,
-// "name": "Pushcha-Vodytsya",
-// "cod": 200
-// }
+@JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
+class Wind {
+  final double speed;
+  final int deg;
+  final double gust;
+
+  Wind({
+    required this.speed,
+    required this.deg,
+    required this.gust,
+  });
+
+  factory Wind.fromJson(Map<String, dynamic> json) => _$WindFromJson(json);
+
+  Map<String, dynamic> toJson() => _$WindToJson(this);
+
+  @override
+  String toString() {
+    return 'Wind{'
+        'speed: $speed, '
+        'deg: $deg, '
+        'gust: $gust, '
+        '}';
+  }
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
+class Clouds {
+  final int all;
+
+  Clouds({
+    required this.all,
+  });
+
+  factory Clouds.fromJson(Map<String, dynamic> json) => _$CloudsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CloudsToJson(this);
+
+  @override
+  String toString() {
+    return 'Clouds{'
+        'all: $all ,'
+        '}';
+  }
+}
+
+@JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
+class Sys {
+  final int type;
+  final double id;
+  final String country;
+  final int sunrise;
+  final int sunset;
+
+  Sys({
+    required this.type,
+    required this.id,
+    required this.country,
+    required this.sunrise,
+    required this.sunset,
+  });
+
+  factory Sys.fromJson(Map<String, dynamic> json) => _$SysFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SysToJson(this);
+
+  @override
+  String toString() {
+    return 'Sys{'
+        'type: $type, '
+        'id: $id, '
+        'country: $country, '
+        'sunrise: $sunrise, '
+        'sunset: $sunset, '
+        '}';
+  }
+}

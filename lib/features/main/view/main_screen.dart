@@ -69,12 +69,12 @@ class _MainScreenState extends State<MainScreen> {
           elevation: 0,
           onPressed: () => debugPrint('Add Button pressed'),
           shape: RoundedRectangleBorder(
-            side: const BorderSide(width: 4, color: Colors.green),
+            side: const BorderSide(width: 4, color: Colors.lightBlueAccent),
             borderRadius: BorderRadius.circular(100),
           ),
           child: const Icon(
             Icons.add,
-            color: Colors.green,
+            color: Colors.lightBlueAccent,
           ),
         ),
       ),
@@ -133,7 +133,6 @@ class _MainScreenState extends State<MainScreen> {
 
   Future<void> _loadWeatherForecast() async {
     _cityCoordinates = await WeatherForecastRepository().getCityCoordinate();
-    // print(_cityCoordinate);
     setState(() {});
   }
 }
@@ -247,12 +246,6 @@ class DetailsInfoWidget extends StatelessWidget {
   }
 }
 
-// extension StringExtension on String {
-//   String capitalize() {
-//     return "${this[0].toUpperCase()}${this.substring(1).toLowerCase()}";
-//   }
-// }
-
 class _BottomNavigationBar extends StatefulWidget {
   final int onTap;
 
@@ -291,7 +284,7 @@ class _BottomNavigationBarState extends State<_BottomNavigationBar> {
           borderRadius: BorderRadius.circular(10),
           child: Container(
             height: 60,
-            color: Colors.green,
+            color: Colors.lightBlueAccent,
             child: Row(
               children: [
                 navItem(

@@ -85,6 +85,33 @@ abstract class AppTextStyle {
     letterSpacing: 0.0,
   );
 
+  static const defaultTextDarkRegular = TextStyle(
+    fontFamily: 'SF Pro Text',
+    fontSize: 15,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.w400,
+    height: 1.0,
+    letterSpacing: 0.0,
+  );
+
+  static const defaultTextDarkSemiBold = TextStyle(
+    fontFamily: 'SF Pro Text',
+    fontSize: 18,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.w600,
+    height: 1.0,
+    letterSpacing: 0.0,
+  );
+
+  static const defaultTextDarkBold = TextStyle(
+    fontFamily: 'SF Pro Text',
+    fontSize: 20,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.w700,
+    height: 1.0,
+    letterSpacing: 0.0,
+  );
+
 
 
 
