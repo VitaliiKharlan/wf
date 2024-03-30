@@ -103,7 +103,7 @@ class _HourlyForecastItemWidget extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: AppColors.solidHourlyButtonShort1.withOpacity(0.2),
+          color: AppColors.solidDarkHourlyButtonShort1.withOpacity(0.2),
           border: Border.all(color: Colors.black.withOpacity(0.2)),
           borderRadius: const BorderRadius.all(Radius.circular(24)),
           boxShadow: [

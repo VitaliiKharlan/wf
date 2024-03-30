@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 
 abstract class AppColors {
-  static const Color solidHourlyButtonShort1 = Color(0xFF48319D);
+  static const Color solidDarkHourlyButtonShort1 = Color(0xFF48319D);
+  static const Color solidDarkParametersButtonShort2 = Color(0xFF48319D);
+
+  static const Color linearWhiteHourlyButtonShort11 = Color(0xFF2E335A);
+  static const Color linearWhiteHourlyButtonShort12 = Color(0xFF221E42);
+  static const Color linearWhiteParametersButtonShort2 = Color(0xFF5936B4);
+
 
 
 
