@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../../repositories/weather_details/models/weather_forecast_details.dart';
 import '../../theme/app_text_style.dart';
 
@@ -12,14 +13,16 @@ class MainDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cityName = weatherForecastDetails?.name.toString();
+    final modelWeatherDetails = weatherForecastDetails;
 
-    final temp = weatherForecastDetails?.main.temp;
+    final cityName = modelWeatherDetails?.name.toString();
+
+    final temp = modelWeatherDetails?.main.temp;
     final tempRound = temp?.toStringAsFixed(0).toString();
 
-    final main = weatherForecastDetails?.weather.first.main.toString();
     final description =
-        weatherForecastDetails?.weather.first.description.toString();
+        modelWeatherDetails?.weather.first.description.toString();
+    final descriptionFirstUp = toBeginningOfSentenceCase('$description');
 
     return Center(
       child: Column(
@@ -54,12 +57,7 @@ class MainDetailsWidget extends StatelessWidget {
                     .copyWith(color: Colors.white24),
               ),
               Text(
-                '$main, ',
-                style: AppTextStyle.defaultSemiBoldTitle3
-                    .copyWith(color: Colors.white24),
-              ),
-              Text(
-                '$description',
+                '$descriptionFirstUp',
                 style: AppTextStyle.defaultSemiBoldTitle3
                     .copyWith(color: Colors.white24),
               ),

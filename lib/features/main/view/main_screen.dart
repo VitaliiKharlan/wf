@@ -6,9 +6,17 @@ import 'package:weather_forecast/features/main/view/nav_bar_model.dart';
 import 'package:weather_forecast/features/main/view/nav_bar.dart';
 import 'package:weather_forecast/features/theme/app.images.dart';
 import 'package:weather_forecast/features/theme/app_text_style.dart';
-import 'package:weather_forecast/repositories/weather_details/models/city_coordinate.dart';
+import '../../../repositories/weather_details/models/city_coordinate.dart';
+import '../../../repositories/weather_details/models/weather_forecast_details.dart';
+import '../../../repositories/weather_details/weather_forecast_details_repository.dart';
 
-import '../../../repositories/weather_details/weather_forecast_repository.dart';
+import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
+import 'package:weather_forecast/screens/blue_screen.dart';
+import 'package:weather_forecast/screens/green_screen.dart';
+import 'package:weather_forecast/screens/pink_screen.dart';
+import 'package:weather_forecast/screens/red_screen.dart';
+
+import '../../../repositories/weather_details/weather_forecast_city_coordinate_repository.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -26,6 +34,7 @@ class _MainScreenState extends State<MainScreen> {
   List<NavBarModel> items = [];
 
   List<CityCoordinate>? _cityCoordinates;
+  WeatherForecastDetails? _weatherForecastDetails;
 
   void onSelectTab(int index) {
     if (_selectedTab == index) return;
@@ -36,7 +45,8 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
-    _loadWeatherForecast();
+    _loadWeatherForecastCityCoordinate();
+    _loadWeatherForecastDetails();
     super.initState();
     items = [
       NavBarModel(
@@ -53,15 +63,18 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: const Text('Weather Forecast'),
-      ),
+      //
+      // !!! AppBar
+      //
+      // appBar: AppBar(
+      //   backgroundColor: Colors.blue,
+      //   centerTitle: true,
+      //   iconTheme: const IconThemeData(color: Colors.white),
+      //   title: const Text('Weather Forecast'),
+      // ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
-        margin: const EdgeInsets.only(top: 10),
+        margin: const EdgeInsets.only(top: 40),
         height: 80,
         width: 80,
         child: FloatingActionButton(
@@ -69,12 +82,15 @@ class _MainScreenState extends State<MainScreen> {
           elevation: 0,
           onPressed: () => debugPrint('Add Button pressed'),
           shape: RoundedRectangleBorder(
-            side: const BorderSide(width: 4, color: Colors.lightBlueAccent),
+            side: const BorderSide(
+              width: 4,
+              color: Color(0xFF5B5F78),
+            ),
             borderRadius: BorderRadius.circular(100),
           ),
           child: const Icon(
             Icons.add,
-            color: Colors.lightBlueAccent,
+            color: Color(0xFF48319D),
           ),
         ),
       ),
@@ -93,6 +109,7 @@ class _MainScreenState extends State<MainScreen> {
           }
         },
       ),
+      backgroundColor: Colors.lightBlueAccent,
       // (
       //     backgroundColor: Colors.lightBlueAccent,
       //     currentIndex: _selectedTab,
@@ -111,28 +128,80 @@ class _MainScreenState extends State<MainScreen> {
       //       ),
       //     ],
       //     onTap: onSelectTab),
-      body: (_cityCoordinates == null)
-          ? const Center(child: CircularProgressIndicator())
-          : Stack(
-              children: [
-                const BackgroundWidget(),
-                const HouseWidget(),
-                DetailsInfoWidget(cityCoordinate: _cityCoordinates!.first),
-              ],
-            ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () async {
-      //     _cityCoordinate =
-      //     await WeatherForecastRepository().getCityCoordinate();
-      //     setState(() {});
-      //   },
-      //   child: const Icon(Icons.download),
-      // ),
+      body: PageView(
+        children: [
+          (_cityCoordinates == null)
+              ? const Center(child: CircularProgressIndicator())
+              : Stack(
+                  children: [
+                    //
+                    /// !!! PageView
+                    //
+                    // PageView(
+                    //   children: [
+                    //     BlueScreenWidget(),
+                    //     GreenScreenWidget(),
+                    //     PinkScreenWidget(),
+                    //     RedScreenWidget(),
+                    //   ],
+                    // ),
+                    const BackgroundWidget(),
+                    const HouseWidget(),
+                    DetailsInfoWidget(
+                        cityCoordinate: _cityCoordinates!.first,
+                        weatherForecastDetail: _weatherForecastDetails),
+                  ],
+                ),
+          (_cityCoordinates == null)
+              ? const Center(child: CircularProgressIndicator())
+              : Stack(
+                  children: [
+                    //
+                    /// !!! PageView
+                    //
+                    // PageView(
+                    //   children: [
+                    //     BlueScreenWidget(),
+                    //     GreenScreenWidget(),
+                    //     PinkScreenWidget(),
+                    //     RedScreenWidget(),
+                    //   ],
+                    // ),
+                    const BackgroundWidget(),
+                    const HouseWidget(),
+                    DetailsInfoWidget(
+                        cityCoordinate: _cityCoordinates!.first,
+                        weatherForecastDetail: _weatherForecastDetails),
+                  ],
+                ),
+          const BlueScreenWidget(),
+          const GreenScreenWidget(),
+          const PinkScreenWidget(),
+          const RedScreenWidget(),
+        ],
+
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () async {
+        //     _cityCoordinate =
+        //     await WeatherForecastRepository().getCityCoordinate();
+        //     setState(() {});
+        //   },
+        //   child: const Icon(Icons.download),
+        // ),
+      ),
     );
   }
 
-  Future<void> _loadWeatherForecast() async {
-    _cityCoordinates = await WeatherForecastRepository().getCityCoordinate();
+  Future<void> _loadWeatherForecastCityCoordinate() async {
+    _cityCoordinates =
+        await WeatherForecastCityCoordinateRepository().getCityCoordinate();
+    setState(() {});
+  }
+
+  Future<void> _loadWeatherForecastDetails() async {
+    _weatherForecastDetails =
+        await WeatherForecastDetailsRepository().getWeatherForecastDetails();
+    // print(_weatherForecastDetails);
     setState(() {});
   }
 }
@@ -168,19 +237,36 @@ class DetailsInfoWidget extends StatelessWidget {
   const DetailsInfoWidget({
     super.key,
     required this.cityCoordinate,
+    required this.weatherForecastDetail,
   });
 
   final CityCoordinate cityCoordinate;
+  final WeatherForecastDetails? weatherForecastDetail;
 
   @override
   Widget build(BuildContext context) {
-    final cityName = cityCoordinate.name.toString();
-    final countryName = cityCoordinate.country.toString().toUpperCase();
+    final modelWeatherDetail = weatherForecastDetail;
+    final currentTemp = modelWeatherDetail?.main.temp;
+    final currentTempRound = currentTemp?.toStringAsFixed(0).toString();
+
+    final description =
+        modelWeatherDetail?.weather.first.description.toString();
+    final descriptionFirstUp = toBeginningOfSentenceCase('$description');
+
+    final tempMax = modelWeatherDetail?.main.tempMax;
+    final tempMaxRound = tempMax?.toStringAsFixed(0).toString();
+
+    final tempMin = modelWeatherDetail?.main.tempMin;
+    final tempMinRound = tempMin?.toStringAsFixed(0).toString();
+
+    final modelCityCoordinate = cityCoordinate;
+    final cityName = modelCityCoordinate.name.toString();
+    final countryName = modelCityCoordinate.country.toString().toUpperCase();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const SizedBox(height: 20),
+        const SizedBox(height: 72),
         ElevatedButton(
           onPressed: () {
             Navigator.push(
@@ -201,40 +287,36 @@ class DetailsInfoWidget extends StatelessWidget {
           ),
         ),
         Text(
-          '19\u00B0',
+          '$currentTempRound\u00B0',
           style:
               AppTextStyle.defaultThinLargeTitle.copyWith(color: Colors.white),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 120),
+          padding: const EdgeInsets.symmetric(horizontal: 80),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                'Mostly',
-                style: AppTextStyle.defaultSemiBoldLargeTitle
-                    .copyWith(color: Colors.white24),
-              ),
-              Text(
-                'Clear',
+                '$descriptionFirstUp',
                 style: AppTextStyle.defaultSemiBoldLargeTitle
                     .copyWith(color: Colors.white24),
               ),
             ],
           ),
         ),
+        const SizedBox(height: 12),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 120),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                ' H:24\u00B0',
+                'H: $tempMaxRound\u00B0',
                 style: AppTextStyle.defaultSemiBoldLargeTitle
                     .copyWith(color: Colors.white),
               ),
               Text(
-                '   L:18\u00B0',
+                'L: $tempMinRound\u00B0',
                 style: AppTextStyle.defaultSemiBoldLargeTitle
                     .copyWith(color: Colors.white),
               ),

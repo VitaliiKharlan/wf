@@ -8,7 +8,7 @@ const _apiKey = '4dbe24134496b55a1b13855ddf7c5847';
 
 const url = '$_host$_cityName$_appID$_apiKey';
 
-class WeatherForecastRepository {
+class WeatherForecastCityCoordinateRepository {
   Future<List<CityCoordinate>> getCityCoordinate() async {
     final response = await Dio().get(url);
 
@@ -16,7 +16,7 @@ class WeatherForecastRepository {
     final cityCoordinateList = data
         .map((dynamic e) => CityCoordinate.fromJson(e as Map<String, dynamic>))
         .toList();
-    print(cityCoordinateList);
+    // print(cityCoordinateList);
 
     return cityCoordinateList;
   }

@@ -30,6 +30,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     final model = _weatherForecastDetails;
     final country = model?.sys.country.toString();
 
+
     final timeFormatter = DateFormat('jm');
 
     final offset = model?.timezone ?? 0;

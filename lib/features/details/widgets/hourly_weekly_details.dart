@@ -94,10 +94,15 @@ class _HourlyForecastItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final temp = weatherForecastDetails?.main.temp;
+    final modelWeatherDetails = weatherForecastDetails;
+
+    final temp = modelWeatherDetails?.main.temp;
     final tempRound = temp?.toStringAsFixed(0).toString();
 
-    final clouds = weatherForecastDetails?.clouds.all.toString();
+    final clouds = modelWeatherDetails?.clouds.all.toString();
+
+    final weatherIcon = modelWeatherDetails?.weather.first.icon.toString();
+    if (weatherIcon != '03n') return const SizedBox.shrink();
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -127,7 +132,7 @@ class _HourlyForecastItemWidget extends StatelessWidget {
                 style: AppTextStyle.defaultTextDarkRegular
                     .copyWith(color: Colors.white),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 20),
               const Image(
                 image: AssetImage(AppImages.smallIconMoonCloudFastWind),
               ),
@@ -137,7 +142,7 @@ class _HourlyForecastItemWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 4),
                       Text(
                         '$clouds%',
                         style: AppTextStyle.defaultTextDarkRegular

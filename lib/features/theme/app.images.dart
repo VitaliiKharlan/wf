@@ -50,4 +50,16 @@ abstract class AppImages {
       'assets/icons/small_icon_sun_cloud_angled_rain.png';
   static const String smallIconSunCloudMidRain =
       'assets/icons/small_icon_sun_cloud_mid_rain.png';
+
+  static const String bottomNavigationBarTabBar =
+      'assets/images/bottom_navigation_bar_tab_bar.png';
+  static const String bottomNavigationBarRectangle =
+      'assets/images/bottom_navigation_bar_rectangle.png';
+  static const String bottomNavigationBarSubtract =
+      'assets/images/bottom_navigation_bar_subtract.png';
+
+  static const String bottomNavigationBarMapIcon =
+      'assets/icons/bottom_navigation_bar_map_icon.png';
+  static const String bottomNavigationBarListIcon =
+      'assets/icons/bottom_navigation_bar_list_icon.png';
 }
