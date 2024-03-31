@@ -15,11 +15,11 @@ class NavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Positioned(
-        //   left: 0,
-        //   bottom: 0,
-        //   child: Image.asset(AppImages.bottomNavigationBarTabBar),
-        // ),
+        Positioned(
+          left: 0,
+          bottom: 0,
+          child: Image.asset(AppImages.backgroundMainImage),
+        ),
         Positioned(
           left: 0,
           bottom: 0,
@@ -30,55 +30,44 @@ class NavBar extends StatelessWidget {
           bottom: 0,
           child: Image.asset(AppImages.bottomNavigationBarSubtract),
         ),
-        // Container(
-        //   margin: EdgeInsets.only(
-        //     left: 8,
-        //     right: 8,
-        //     bottom: Platform.isAndroid ? 0 : 0,
-        //   ),
-        //   child: ClipRRect(
-        //     borderRadius: BorderRadius.circular(10),
-        //     child: Container(
-        //       height: 80,
-        //       color: Colors.red,
-        //       child:
         SizedBox(
-          height: 88,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              navItem(
-                const AssetImage(
-                    'assets/icons/bottom_navigation_bar_map_icon.png'),
-                pageIndex == 0,
-                onTap: () => onTap(0),
-              ),
-              navItem(
-                const AssetImage(
-                    'assets/icons/bottom_navigation_bar_list_icon.png'),
-                pageIndex == 1,
-                onTap: () => onTap(1),
-              ),
-            ],
+          height: 100,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 32,
+              top: 32,
+              right: 32,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                navItem(
+                  const AssetImage(
+                      'assets/icons/bottom_navigation_bar_map_icon.png'),
+                  pageIndex == 0,
+                  onTap: () => onTap(0),
+                ),
+                navItem(
+                  const AssetImage(
+                      'assets/icons/bottom_navigation_bar_list_icon.png'),
+                  pageIndex == 1,
+                  onTap: () => onTap(1),
+                ),
+              ],
+            ),
           ),
         ),
-
-        //     ),
-        //   ),
-        // ),
       ],
     );
   }
 }
 
 Widget navItem(AssetImage image, bool selected, {Function()? onTap}) {
-  return Expanded(
-    child: InkWell(
-      onTap: onTap,
-      child: Image(
-        image: image,
-        color: selected ? Colors.white : Colors.white24,
-      ),
+  return InkWell(
+    onTap: onTap,
+    child: Image(
+      image: image,
+      color: selected ? Colors.white : Colors.white24,
     ),
   );
 }

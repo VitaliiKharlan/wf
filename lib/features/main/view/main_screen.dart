@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:weather_forecast/features/details/view/details_screen.dart';
 import 'package:weather_forecast/features/main/view/nav_bar_model.dart';
@@ -74,7 +72,7 @@ class _MainScreenState extends State<MainScreen> {
       // ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
-        margin: const EdgeInsets.only(top: 40),
+        margin: const EdgeInsets.only(top: 88),
         height: 80,
         width: 80,
         child: FloatingActionButton(
@@ -110,41 +108,13 @@ class _MainScreenState extends State<MainScreen> {
         },
       ),
       backgroundColor: Colors.lightBlueAccent,
-      // (
-      //     backgroundColor: Colors.lightBlueAccent,
-      //     currentIndex: _selectedTab,
-      //     items: const [
-      //       BottomNavigationBarItem(
-      //         icon: Icon(
-      //           Icons.home,
-      //         ),
-      //         label: 'Main',
-      //       ),
-      //       BottomNavigationBarItem(
-      //         icon: Icon(
-      //           Icons.tv_outlined,
-      //         ),
-      //         label: 'Details',
-      //       ),
-      //     ],
-      //     onTap: onSelectTab),
+
       body: PageView(
         children: [
           (_cityCoordinates == null)
               ? const Center(child: CircularProgressIndicator())
               : Stack(
                   children: [
-                    //
-                    /// !!! PageView
-                    //
-                    // PageView(
-                    //   children: [
-                    //     BlueScreenWidget(),
-                    //     GreenScreenWidget(),
-                    //     PinkScreenWidget(),
-                    //     RedScreenWidget(),
-                    //   ],
-                    // ),
                     const BackgroundWidget(),
                     const HouseWidget(),
                     DetailsInfoWidget(
@@ -156,17 +126,6 @@ class _MainScreenState extends State<MainScreen> {
               ? const Center(child: CircularProgressIndicator())
               : Stack(
                   children: [
-                    //
-                    /// !!! PageView
-                    //
-                    // PageView(
-                    //   children: [
-                    //     BlueScreenWidget(),
-                    //     GreenScreenWidget(),
-                    //     PinkScreenWidget(),
-                    //     RedScreenWidget(),
-                    //   ],
-                    // ),
                     const BackgroundWidget(),
                     const HouseWidget(),
                     DetailsInfoWidget(
@@ -179,15 +138,6 @@ class _MainScreenState extends State<MainScreen> {
           const PinkScreenWidget(),
           const RedScreenWidget(),
         ],
-
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () async {
-        //     _cityCoordinate =
-        //     await WeatherForecastRepository().getCityCoordinate();
-        //     setState(() {});
-        //   },
-        //   child: const Icon(Icons.download),
-        // ),
       ),
     );
   }
@@ -199,9 +149,9 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> _loadWeatherForecastDetails() async {
-    _weatherForecastDetails =
-        await WeatherForecastDetailsRepository().getWeatherForecastDetails();
-    // print(_weatherForecastDetails);
+    _weatherForecastDetails = await WeatherForecastDetailsRepository()
+        .getWeatherForecastDetailsKyiv();
+
     setState(() {});
   }
 }
@@ -324,183 +274,6 @@ class DetailsInfoWidget extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _BottomNavigationBar extends StatefulWidget {
-  final int onTap;
-
-  const _BottomNavigationBar({
-    required this.onTap,
-  });
-
-  @override
-  State<_BottomNavigationBar> createState() => _BottomNavigationBarState();
-}
-
-class _BottomNavigationBarState extends State<_BottomNavigationBar> {
-  int _selectedTab = 0;
-  int pageIndex = 0;
-
-  // final Function(int) onTap;
-
-  void onSelectTab(int index) {
-    if (_selectedTab == index) return;
-    setState(() {
-      _selectedTab = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        bottom: Platform.isAndroid ? 16 : 0,
-      ),
-      child: BottomAppBar(
-        elevation: 0.0,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Container(
-            height: 60,
-            color: Colors.lightBlueAccent,
-            child: Row(
-              children: [
-                navItem(
-                  Icons.home_outlined,
-                  pageIndex == 0,
-                  // onTap: () => onTap(0),
-                ),
-                navItem(
-                  Icons.notifications_outlined,
-                  pageIndex == 1,
-                  // onTap: () => onTap(0),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-
-    // BottomNavigationBar(
-    //   backgroundColor: Colors.lightBlueAccent,
-    //   currentIndex: _selectedTab,
-    //   items: const [
-    //     BottomNavigationBarItem(
-    //       icon: Icon(
-    //         Icons.home,
-    //       ),
-    //       label: 'Main',
-    //     ),
-    //     BottomNavigationBarItem(
-    //       icon: Icon(
-    //         Icons.tv_outlined,
-    //       ),
-    //       label: 'Details',
-    //     ),
-    //   ],
-    //   onTap: onSelectTab);
-  }
-}
-
-Widget navItem(IconData icon, bool selected, {Function()? onTap}) {
-  return Expanded(
-    child: InkWell(
-      onTap: onTap,
-      child: Icon(
-        icon,
-        color: selected ? Colors.white : Colors.white24,
-      ),
-    ),
-  );
-}
-
-// class _BottomNavigationBar extends StatelessWidget {
-//   const _BottomNavigationBar({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     int _selectedTab = 0;
-//
-//     void onSelectTab(int index) {
-//       if (_selectedTab == index) return;
-//       setState(() {
-//         _selectedTab = index;
-//       });
-//     }
-//
-//     return BottomNavigationBar(
-//         backgroundColor: Colors.lightBlueAccent,
-//         currentIndex: _selectedTab,
-//         items: const [
-//           BottomNavigationBarItem(
-//             icon: Icon(
-//               Icons.home,
-//             ),
-//             label: 'Main',
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(
-//               Icons.tv_outlined,
-//             ),
-//             label: 'Details',
-//           ),
-//         ],
-//         onTap: onSelectTab);
-//   }
-// }
-
-class TabPage extends StatelessWidget {
-  final int tab;
-
-  const TabPage({
-    super.key,
-    required this.tab,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Tab $tab')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Tab $tab'),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => Page(tab: tab),
-                  ),
-                );
-              },
-              child: const Text('Go to page'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class Page extends StatelessWidget {
-  final int tab;
-
-  const Page({
-    super.key,
-    required this.tab,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Page Tab $tab')),
-      body: Center(child: Text('Tab $tab')),
     );
   }
 }

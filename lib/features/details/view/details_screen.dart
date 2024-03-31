@@ -99,19 +99,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
   Future<void> _loadWeatherForecastDetails() async {
     _weatherForecastDetails =
-        await WeatherForecastDetailsRepository().getWeatherForecastDetails();
+        await WeatherForecastDetailsRepository().getWeatherForecastDetailsKyiv();
     // print(_weatherForecastDetails);
     setState(() {});
   }
 }
-
-// const sunriseUnix = 1660903800;
-// const sunsetUnix = 1660952880;
-//
-// function showSunTimes(sunriseUnix, sunsetUnix, timeZone) {
-//   console.log(`Sunrise (${timeZone}):`, new Date(sunriseUnix * 1000).toLocaleString('default', { timeZone }));
-//   console.log(`Sunset (${timeZone}):`, new Date(sunsetUnix * 1000).toLocaleString('default', { timeZone }));
-// }
-//
-// showSunTimes(sunriseUnix, sunsetUnix, 'America/New_York');
-// showSunTimes(sunriseUnix, sunsetUnix, 'UTC');

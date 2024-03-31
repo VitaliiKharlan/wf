@@ -102,7 +102,7 @@ class _HourlyForecastItemWidget extends StatelessWidget {
     final clouds = modelWeatherDetails?.clouds.all.toString();
 
     final weatherIcon = modelWeatherDetails?.weather.first.icon.toString();
-    if (weatherIcon != '03n') return const SizedBox.shrink();
+    if (weatherIcon != '04n') return const SizedBox.shrink();
 
     return Padding(
       padding: const EdgeInsets.all(8.0),

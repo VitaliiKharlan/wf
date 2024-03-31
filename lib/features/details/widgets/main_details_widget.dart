@@ -46,11 +46,6 @@ class MainDetailsWidget extends StatelessWidget {
                 maxLines: 1,
               ),
 
-              // Text(
-              //   '19\u00B0',
-              //   style: AppTextStyle.defaultSemiBoldTitle3
-              //       .copyWith(color: Colors.white),
-              // ),
               Text(
                 ' | ',
                 style: AppTextStyle.defaultSemiBoldTitle3
