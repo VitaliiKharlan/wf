@@ -17,6 +17,7 @@ import 'package:weather_forecast/screens/red_screen.dart';
 import '../../../repositories/weather_details/weather_forecast_city_coordinate_repository.dart';
 
 class MainScreen extends StatefulWidget {
+
   const MainScreen({super.key});
 
   @override
@@ -33,6 +34,8 @@ class _MainScreenState extends State<MainScreen> {
 
   List<CityCoordinate>? _cityCoordinates;
   WeatherForecastDetails? _weatherForecastDetails;
+
+  String _enterCityName = 'Kyiv';
 
   void onSelectTab(int index) {
     if (_selectedTab == index) return;
@@ -122,18 +125,7 @@ class _MainScreenState extends State<MainScreen> {
                         weatherForecastDetail: _weatherForecastDetails),
                   ],
                 ),
-          (_cityCoordinates == null)
-              ? const Center(child: CircularProgressIndicator())
-              : Stack(
-                  children: [
-                    const BackgroundWidget(),
-                    const HouseWidget(),
-                    DetailsInfoWidget(
-                        cityCoordinate: _cityCoordinates!.first,
-                        weatherForecastDetail: _weatherForecastDetails),
-                  ],
-                ),
-          const BlueScreenWidget(),
+          const BlueScreenWidget(enterCityName: 'Kyiv'),
           const GreenScreenWidget(),
           const PinkScreenWidget(),
           const RedScreenWidget(),
@@ -143,14 +135,16 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> _loadWeatherForecastCityCoordinate() async {
-    _cityCoordinates =
-        await WeatherForecastCityCoordinateRepository().getCityCoordinate();
-    setState(() {});
+    _cityCoordinates = await WeatherForecastCityCoordinateRepository()
+        .getCityCoordinate('Kyiv');
+    setState(() {
+      _enterCityName = 'Kyiv';
+    });
   }
 
   Future<void> _loadWeatherForecastDetails() async {
     _weatherForecastDetails = await WeatherForecastDetailsRepository()
-        .getWeatherForecastDetailsKyiv();
+        .getWeatherForecastDetails(lat, lon);
 
     setState(() {});
   }

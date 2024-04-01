@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
 class BlueScreenWidget extends StatelessWidget {
-  const BlueScreenWidget({super.key});
+  final String enterCityName;
+
+  const BlueScreenWidget({
+    super.key,
+    required this.enterCityName,
+  });
 
   @override
   Widget build(BuildContext context) {

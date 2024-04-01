@@ -6,17 +6,20 @@ const _units = 'units=metric&';
 const _appID = 'appid=';
 const _apiKey = '4dbe24134496b55a1b13855ddf7c5847';
 
-const _latKyiv = 'lat=50.4500336&';
-const _lonKyiv = 'lon=30.5241361&';
-const urlKyiv = '$_host$_latKyiv$_lonKyiv$_units$_appID$_apiKey';
+// // Kyiv
+// const lat = 'lat=50.4500336&';
+// const lon = 'lon=30.5241361&';
 
-const _latLviv = 'lat=49.841952&';
-const _lonLviv = 'lon=24.0315921&';
-const urlLviv = '$_host$_latLviv$_lonLviv$_units$_appID$_apiKey';
+// Lviv
+const lat = 'lat=49.841952&';
+const lon = 'lon=24.0315921&';
+
+final url = '$_host$lat$lon$_units$_appID$_apiKey';
 
 class WeatherForecastDetailsRepository {
-  Future<WeatherForecastDetails> getWeatherForecastDetailsKyiv() async {
-    final response = await Dio().get(urlKyiv);
+  Future<WeatherForecastDetails> getWeatherForecastDetails(String lat,
+      String lon) async {
+    final response = await Dio().get(url);
 
     final data = response.data as Map<String, dynamic>;
 
@@ -25,13 +28,5 @@ class WeatherForecastDetailsRepository {
     return weatherForecastDetailsList;
   }
 
-  Future<WeatherForecastDetails> getWeatherForecastDetailsLviv() async {
-    final response = await Dio().get(urlLviv);
 
-    final data = response.data as Map<String, dynamic>;
-
-    final weatherForecastDetailsList = WeatherForecastDetails.fromJson(data);
-
-    return weatherForecastDetailsList;
-  }
 }

@@ -102,7 +102,7 @@ class _HourlyForecastItemWidget extends StatelessWidget {
     final clouds = modelWeatherDetails?.clouds.all.toString();
 
     final weatherIcon = modelWeatherDetails?.weather.first.icon.toString();
-    if (weatherIcon != '04n') return const SizedBox.shrink();
+    // if (weatherIcon == '02n') return const SizedBox.shrink();
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -133,9 +133,29 @@ class _HourlyForecastItemWidget extends StatelessWidget {
                     .copyWith(color: Colors.white),
               ),
               const SizedBox(height: 20),
-              const Image(
-                image: AssetImage(AppImages.smallIconMoonCloudFastWind),
-              ),
+              (weatherIcon == '01n')
+                  ? const Image(
+                      image: AssetImage(AppImages.smallIconSunCloudMidRain),
+                    )
+                  : (weatherIcon == '02n')
+                      ? const Image(
+                          image:
+                              AssetImage(AppImages.smallIconMoonCloudFastWind),
+                        )
+                      : (weatherIcon == '03n')
+                          ? const Image(
+                              image: AssetImage(
+                                  AppImages.smallIconSunCloudAngledRain),
+                            )
+                          : (weatherIcon == '03n')
+                              ? const Image(
+                                  image: AssetImage(
+                                      AppImages.smallIconMoonCloudMidRain),
+                                )
+                              : const Image(
+                                  image: AssetImage(
+                                      AppImages.smallIconSunCloudAngledRain),
+                                ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),

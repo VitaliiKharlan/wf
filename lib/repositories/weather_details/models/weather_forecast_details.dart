@@ -195,8 +195,8 @@ class Clouds {
 
 @JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
 class Sys {
-  final int type;
-  final double id;
+  final int? type;
+  final double? id;
   final String country;
   final int sunrise;
   final int sunset;

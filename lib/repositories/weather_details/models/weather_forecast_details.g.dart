@@ -107,8 +107,8 @@ Map<String, dynamic> _$CloudsToJson(Clouds instance) => <String, dynamic>{
     };
 
 Sys _$SysFromJson(Map<String, dynamic> json) => Sys(
-      type: json['type'] as int,
-      id: (json['id'] as num).toDouble(),
+      type: json['type'] as int?,
+      id: (json['id'] as num?)?.toDouble(),
       country: json['country'] as String,
       sunrise: json['sunrise'] as int,
       sunset: json['sunset'] as int,

@@ -30,7 +30,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
     final model = _weatherForecastDetails;
     final country = model?.sys.country.toString();
 
-
     final timeFormatter = DateFormat('jm');
 
     final offset = model?.timezone ?? 0;
@@ -47,60 +46,59 @@ class _DetailsScreenState extends State<DetailsScreen> {
         DateTime.fromMillisecondsSinceEpoch(sunsetTimeToMilliseconds);
     final outputSunsetTime = timeFormatter.format(dateTimeSunsetTime);
 
-    // final sunriseTime = model?.sys.sunrise.toInt();
-    // int sunriseTimeModel = model!.sys.sunrise.toInt();
-    // int sunriseTime = sunriseTimeModel;
-    // DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(sunriseTime);
-    // var inputFormat = DateTime.fromMillisecondsSinceEpoch(sunriseTime);
-    // var outputFormat = DateFormat.d().add_MMMM().add_y().format(dateTime);
-
     return Scaffold(
       backgroundColor: const Color(0xFF2E335A),
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        children: [
-          const SizedBox(height: 8),
-          Center(
-            child: Text(
-              '$country',
-              style: AppTextStyle.defaultRegularLargeTitle
-                  .copyWith(color: Colors.white),
+      body: (_weatherForecastDetails == null)
+          ? const Center(
+              child: SizedBox(
+                  height: 80, width: 80, child: CircularProgressIndicator()),
+            )
+          : ListView(
+              physics: const BouncingScrollPhysics(),
+              children: [
+                const SizedBox(height: 8),
+                Center(
+                  child: Text(
+                    '$country',
+                    style: AppTextStyle.defaultRegularLargeTitle
+                        .copyWith(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                MainDetailsWidget(
+                    weatherForecastDetails: _weatherForecastDetails),
+                const SizedBox(height: 24),
+                HourlyWeeklyDetailsWidget(
+                    weatherForecastDetails: _weatherForecastDetails),
+                const SizedBox(height: 8),
+                const AirQualityDetailsWidget(),
+                const SizedBox(height: 12),
+                ParametersDetailsWidget(
+                    weatherForecastDetails: _weatherForecastDetails),
+                const SizedBox(height: 8),
+                Center(
+                  child: Text(
+                    outputSunriseTime,
+                    style: AppTextStyle.defaultRegularLargeTitle
+                        .copyWith(color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Center(
+                  child: Text(
+                    outputSunsetTime,
+                    style: AppTextStyle.defaultRegularLargeTitle
+                        .copyWith(color: Colors.white),
+                  ),
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 8),
-          MainDetailsWidget(weatherForecastDetails: _weatherForecastDetails),
-          const SizedBox(height: 24),
-          HourlyWeeklyDetailsWidget(
-              weatherForecastDetails: _weatherForecastDetails),
-          const SizedBox(height: 8),
-          const AirQualityDetailsWidget(),
-          const SizedBox(height: 12),
-          ParametersDetailsWidget(weatherForecastDetails: _weatherForecastDetails),
-          const SizedBox(height: 8),
-          Center(
-            child: Text(
-              outputSunriseTime,
-              style: AppTextStyle.defaultRegularLargeTitle
-                  .copyWith(color: Colors.white),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Center(
-            child: Text(
-              outputSunsetTime,
-              style: AppTextStyle.defaultRegularLargeTitle
-                  .copyWith(color: Colors.white),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
   Future<void> _loadWeatherForecastDetails() async {
-    _weatherForecastDetails =
-        await WeatherForecastDetailsRepository().getWeatherForecastDetailsKyiv();
-    // print(_weatherForecastDetails);
+    _weatherForecastDetails = await WeatherForecastDetailsRepository()
+        .getWeatherForecastDetails(lat, lon);
     setState(() {});
   }
 }
