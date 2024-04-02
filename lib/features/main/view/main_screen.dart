@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_forecast/features/city/city_controller.dart';
 import 'package:weather_forecast/features/details/view/details_screen.dart';
 import 'package:weather_forecast/features/main/view/nav_bar_model.dart';
 import 'package:weather_forecast/features/main/view/nav_bar.dart';
@@ -6,34 +7,8 @@ import 'package:weather_forecast/features/theme/app.images.dart';
 import 'package:weather_forecast/features/theme/app_text_style.dart';
 import '../../../repositories/weather_details/models/city_coordinate.dart';
 import '../../../repositories/weather_details/models/weather_forecast_details.dart';
-import '../../../repositories/weather_details/weather_forecast_details_repository.dart';
 
 import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
-import 'package:weather_forecast/screens/blue_screen.dart';
-import 'package:weather_forecast/screens/green_screen.dart';
-
-import 'package:weather_forecast/screens/red_screen.dart';
-
-import '../../../repositories/weather_details/weather_forecast_city_coordinate_repository.dart';
-
-// class ChangedCityModel extends ChangeNotifier {
-//   int _counter = 0;
-//   String _enterCityName = 'Kyiv';
-//
-//   int get counter => _counter;
-//   String enterCityName = 'Kyiv';
-//
-//   void changedCity() {
-//     _counter++;
-//     _enterCityName;
-//     notifyListeners();  // This will alert the widgets that are listening to this model.
-//   }
-// }
-//
-// ChangeNotifierProvider(
-// create: (context) => CounterModel(),
-// child: YourApp(),
-// )
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -50,19 +25,6 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedTab = 0;
   List<NavBarModel> items = [];
 
-  List<CityCoordinate>? _cityCoordinates;
-  WeatherForecastDetails? _weatherForecastDetails;
-
-  int _counter = 0;
-  String _enterCityName = 'Kyiv';
-
-  void _changedCity() {
-    setState(() {
-      _counter++;
-      _enterCityName;
-    });
-  }
-
   void onSelectTab(int index) {
     if (_selectedTab == index) return;
     setState(() {
@@ -70,11 +32,18 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  List<CityCoordinate> cities = [];
+
   @override
   void initState() {
-    _loadWeatherForecastCityCoordinate();
-    _loadWeatherForecastDetails();
     super.initState();
+    final cityController = CityController();
+    cityController.init();
+    cityController.addListener(() {
+      setState(() {
+        cities = cityController.cities;
+      });
+    });
     items = [
       NavBarModel(
         page: const TabPage(tab: 1),
@@ -87,21 +56,9 @@ class _MainScreenState extends State<MainScreen> {
     ];
   }
 
-  // final changeCityModel = context.watch<ChangedCityModel>();
-  // changeCityModel.changedCity();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //
-      // !!! AppBar
-      //
-      // appBar: AppBar(
-      //   backgroundColor: Colors.blue,
-      //   centerTitle: true,
-      //   iconTheme: const IconThemeData(color: Colors.white),
-      //   title: const Text('Weather Forecast'),
-      // ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
         margin: const EdgeInsets.only(top: 88),
@@ -140,54 +97,16 @@ class _MainScreenState extends State<MainScreen> {
         },
       ),
       backgroundColor: Colors.lightBlueAccent,
-
-      body: PageView(
-        children: [
-          (_cityCoordinates == null)
-              ? const Center(child: CircularProgressIndicator())
-              : Stack(
-                  children: [
-                    const BackgroundWidget(),
-                    const HouseWidget(),
-                    DetailsInfoWidget(
-                      cityCoordinate: _cityCoordinates!.first,
-                      weatherForecastDetail: _weatherForecastDetails,
-                    ),
-                  ],
-                ),
-          BlueScreenWidget(
-            counter: _counter,
-            enterCityName: _enterCityName,
-            changedCity: _changedCity,
-          ),
-          GreenScreenWidget(
-            counter: _counter,
-            enterCityName: _enterCityName,
-            changedCity: _changedCity,
-          ),
-          RedScreenWidget(
-            counter: _counter,
-            enterCityName: _enterCityName,
-            changedCity: _changedCity,
-          ),
-        ],
+      body: PageView.builder(
+        itemBuilder: (context, index) {
+          return _CityPage(
+            cityCoordinates: cities[index],
+            weatherForecastDetails: null,
+          );
+        },
+        itemCount: cities.length,
       ),
     );
-  }
-
-  Future<void> _loadWeatherForecastCityCoordinate() async {
-    _cityCoordinates = await WeatherForecastCityCoordinateRepository()
-        .getCityCoordinate('Kyiv');
-    setState(() {
-      _enterCityName = 'Kyiv';
-    });
-  }
-
-  Future<void> _loadWeatherForecastDetails() async {
-    _weatherForecastDetails = await WeatherForecastDetailsRepository()
-        .getWeatherForecastDetails(lat, lon);
-
-    setState(() {});
   }
 }
 
@@ -310,5 +229,29 @@ class DetailsInfoWidget extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class _CityPage extends StatelessWidget {
+  final CityCoordinate? cityCoordinates;
+  final WeatherForecastDetails? weatherForecastDetails;
+
+  const _CityPage(
+      {required this.cityCoordinates, required this.weatherForecastDetails});
+
+  @override
+  Widget build(BuildContext context) {
+    return (cityCoordinates == null)
+        ? const Center(child: CircularProgressIndicator())
+        : Stack(
+            children: [
+              const BackgroundWidget(),
+              const HouseWidget(),
+              DetailsInfoWidget(
+                cityCoordinate: cityCoordinates!,
+                weatherForecastDetail: weatherForecastDetails,
+              ),
+            ],
+          );
   }
 }
