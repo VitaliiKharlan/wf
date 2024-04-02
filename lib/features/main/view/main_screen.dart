@@ -11,13 +11,31 @@ import '../../../repositories/weather_details/weather_forecast_details_repositor
 import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
 import 'package:weather_forecast/screens/blue_screen.dart';
 import 'package:weather_forecast/screens/green_screen.dart';
-import 'package:weather_forecast/screens/pink_screen.dart';
+
 import 'package:weather_forecast/screens/red_screen.dart';
 
 import '../../../repositories/weather_details/weather_forecast_city_coordinate_repository.dart';
 
-class MainScreen extends StatefulWidget {
+// class ChangedCityModel extends ChangeNotifier {
+//   int _counter = 0;
+//   String _enterCityName = 'Kyiv';
+//
+//   int get counter => _counter;
+//   String enterCityName = 'Kyiv';
+//
+//   void changedCity() {
+//     _counter++;
+//     _enterCityName;
+//     notifyListeners();  // This will alert the widgets that are listening to this model.
+//   }
+// }
+//
+// ChangeNotifierProvider(
+// create: (context) => CounterModel(),
+// child: YourApp(),
+// )
 
+class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
   @override
@@ -35,7 +53,15 @@ class _MainScreenState extends State<MainScreen> {
   List<CityCoordinate>? _cityCoordinates;
   WeatherForecastDetails? _weatherForecastDetails;
 
+  int _counter = 0;
   String _enterCityName = 'Kyiv';
+
+  void _changedCity() {
+    setState(() {
+      _counter++;
+      _enterCityName;
+    });
+  }
 
   void onSelectTab(int index) {
     if (_selectedTab == index) return;
@@ -60,6 +86,9 @@ class _MainScreenState extends State<MainScreen> {
       ),
     ];
   }
+
+  // final changeCityModel = context.watch<ChangedCityModel>();
+  // changeCityModel.changedCity();
 
   @override
   Widget build(BuildContext context) {
@@ -121,14 +150,26 @@ class _MainScreenState extends State<MainScreen> {
                     const BackgroundWidget(),
                     const HouseWidget(),
                     DetailsInfoWidget(
-                        cityCoordinate: _cityCoordinates!.first,
-                        weatherForecastDetail: _weatherForecastDetails),
+                      cityCoordinate: _cityCoordinates!.first,
+                      weatherForecastDetail: _weatherForecastDetails,
+                    ),
                   ],
                 ),
-          const BlueScreenWidget(enterCityName: 'Kyiv'),
-          const GreenScreenWidget(),
-          const PinkScreenWidget(),
-          const RedScreenWidget(),
+          BlueScreenWidget(
+            counter: _counter,
+            enterCityName: _enterCityName,
+            changedCity: _changedCity,
+          ),
+          GreenScreenWidget(
+            counter: _counter,
+            enterCityName: _enterCityName,
+            changedCity: _changedCity,
+          ),
+          RedScreenWidget(
+            counter: _counter,
+            enterCityName: _enterCityName,
+            changedCity: _changedCity,
+          ),
         ],
       ),
     );
