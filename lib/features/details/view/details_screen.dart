@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:weather_forecast/features/city/city_controller.dart';
-import 'package:weather_forecast/repositories/weather_details/models/city_coordinate.dart';
+
 
 import '../../theme/app_text_style.dart';
 import '../../../repositories/weather_details/weather_forecast_details_repository.dart';

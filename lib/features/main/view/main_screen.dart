@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
-import '../../../repositories/weather_details/weather_forecast_details_repository.dart';
+
 import '../../city/city_controller.dart';
 import '../../details/view/details_screen.dart';
 import 'nav_bar_model.dart';
