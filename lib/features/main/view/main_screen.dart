@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:weather_forecast/features/city/city_controller.dart';
-import 'package:weather_forecast/features/details/view/details_screen.dart';
-import 'package:weather_forecast/features/main/view/nav_bar_model.dart';
-import 'package:weather_forecast/features/main/view/nav_bar.dart';
-import 'package:weather_forecast/features/theme/app.images.dart';
-import 'package:weather_forecast/features/theme/app_text_style.dart';
+import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
+import '../../../repositories/weather_details/weather_forecast_details_repository.dart';
+import '../../city/city_controller.dart';
+import '../../details/view/details_screen.dart';
+import 'nav_bar_model.dart';
+import 'nav_bar.dart';
+import '../../theme/app.images.dart';
+import '../../theme/app_text_style.dart';
 import '../../../repositories/weather_details/models/city_coordinate.dart';
 import '../../../repositories/weather_details/models/weather_forecast_details.dart';
 
-import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -25,6 +26,8 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedTab = 0;
   List<NavBarModel> items = [];
 
+
+
   void onSelectTab(int index) {
     if (_selectedTab == index) return;
     setState(() {
@@ -32,10 +35,12 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
-  List<CityCoordinate> cities = [];
+  List<CityCoordinate>? cities = [];
+  WeatherForecastDetails? weatherForecastDetails;
 
   @override
   void initState() {
+    // _loadWeatherForecastDetails();
     super.initState();
     final cityController = CityController();
     cityController.init();
@@ -44,6 +49,7 @@ class _MainScreenState extends State<MainScreen> {
         cities = cityController.cities;
       });
     });
+
     items = [
       NavBarModel(
         page: const TabPage(tab: 1),
@@ -56,8 +62,15 @@ class _MainScreenState extends State<MainScreen> {
     ];
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+    //
+    // final modelCityCoordinate = cities;
+    // final latCoord = modelCityCoordinate?.first.lat;
+    // final lonCoord = modelCityCoordinate?.first.lon;
+    //
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
@@ -100,14 +113,20 @@ class _MainScreenState extends State<MainScreen> {
       body: PageView.builder(
         itemBuilder: (context, index) {
           return _CityPage(
-            cityCoordinates: cities[index],
+            cityCoordinates: cities?[index],
             weatherForecastDetails: null,
           );
         },
-        itemCount: cities.length,
+        itemCount: cities?.length,
       ),
     );
   }
+
+  // Future<void> _loadWeatherForecastDetails() async {
+  //   weatherForecastDetails = await WeatherForecastDetailsRepository()
+  //       .getWeatherForecastDetails(latCoord, lonCoord);
+  //   setState(() {});
+  // }
 }
 
 class BackgroundWidget extends StatelessWidget {
@@ -141,15 +160,16 @@ class DetailsInfoWidget extends StatelessWidget {
   const DetailsInfoWidget({
     super.key,
     required this.cityCoordinate,
-    required this.weatherForecastDetail,
+    required this.weatherForecastDetails,
   });
 
   final CityCoordinate cityCoordinate;
-  final WeatherForecastDetails? weatherForecastDetail;
+  final WeatherForecastDetails? weatherForecastDetails;
+  // final double latCoord;
 
   @override
   Widget build(BuildContext context) {
-    final modelWeatherDetail = weatherForecastDetail;
+    final modelWeatherDetail = weatherForecastDetails;
     final currentTemp = modelWeatherDetail?.main.temp;
     final currentTempRound = currentTemp?.toStringAsFixed(0).toString();
 
@@ -166,6 +186,9 @@ class DetailsInfoWidget extends StatelessWidget {
     final modelCityCoordinate = cityCoordinate;
     final cityName = modelCityCoordinate.name.toString();
     final countryName = modelCityCoordinate.country.toString().toUpperCase();
+
+    // final latCoord = modelCityCoordinate.lat;
+    // final lonCoord = modelCityCoordinate.lon;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -215,6 +238,7 @@ class DetailsInfoWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
+          // '$latCoord',
                 'H: $tempMaxRound\u00B0',
                 style: AppTextStyle.defaultSemiBoldLargeTitle
                     .copyWith(color: Colors.white),
@@ -230,14 +254,18 @@ class DetailsInfoWidget extends StatelessWidget {
       ],
     );
   }
+
+
 }
 
 class _CityPage extends StatelessWidget {
   final CityCoordinate? cityCoordinates;
   final WeatherForecastDetails? weatherForecastDetails;
 
-  const _CityPage(
-      {required this.cityCoordinates, required this.weatherForecastDetails});
+  const _CityPage({
+    required this.cityCoordinates,
+    required this.weatherForecastDetails,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -249,7 +277,7 @@ class _CityPage extends StatelessWidget {
               const HouseWidget(),
               DetailsInfoWidget(
                 cityCoordinate: cityCoordinates!,
-                weatherForecastDetail: weatherForecastDetails,
+                weatherForecastDetails: weatherForecastDetails,
               ),
             ],
           );
