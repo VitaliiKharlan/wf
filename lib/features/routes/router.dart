@@ -1,9 +1,8 @@
-import 'package:weather_forecast/features/details/view/details_screen.dart';
 import 'package:weather_forecast/features/main/view/main_screen.dart';
 
 final routes = {
   '/': (context) => const MainScreen(),
-  '/details': (context) => const DetailsScreen(),
+  // '/details': (context) => const DetailsScreen(),
 };
 
 //

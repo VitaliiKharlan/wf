@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
+import 'package:weather_forecast/features/coord/coord_controller.dart';
 
 import '../../city/city_controller.dart';
 import '../../details/view/details_screen.dart';
@@ -9,7 +10,6 @@ import '../../theme/app.images.dart';
 import '../../theme/app_text_style.dart';
 import '../../../repositories/weather_details/models/city_coordinate.dart';
 import '../../../repositories/weather_details/models/weather_forecast_details.dart';
-
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -26,8 +26,6 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedTab = 0;
   List<NavBarModel> items = [];
 
-
-
   void onSelectTab(int index) {
     if (_selectedTab == index) return;
     setState(() {
@@ -36,17 +34,23 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   List<CityCoordinate>? cities = [];
-  WeatherForecastDetails? weatherForecastDetails;
+  List<WeatherForecastDetails>? weatherForecastDetails;
 
   @override
   void initState() {
-    // _loadWeatherForecastDetails();
     super.initState();
     final cityController = CityController();
     cityController.init();
     cityController.addListener(() {
       setState(() {
         cities = cityController.cities;
+      });
+    });
+    final detailsController = CoordController();
+    detailsController.init();
+    detailsController.addListener(() {
+      setState(() {
+        weatherForecastDetails = detailsController.details;
       });
     });
 
@@ -61,8 +65,6 @@ class _MainScreenState extends State<MainScreen> {
       ),
     ];
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +116,7 @@ class _MainScreenState extends State<MainScreen> {
         itemBuilder: (context, index) {
           return _CityPage(
             cityCoordinates: cities?[index],
-            weatherForecastDetails: null,
+            weatherForecastDetails: weatherForecastDetails?[index],
           );
         },
         itemCount: cities?.length,
@@ -122,11 +124,11 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  // Future<void> _loadWeatherForecastDetails() async {
-  //   weatherForecastDetails = await WeatherForecastDetailsRepository()
-  //       .getWeatherForecastDetails(latCoord, lonCoord);
-  //   setState(() {});
-  // }
+// Future<void> _loadWeatherForecastDetails() async {
+//   weatherForecastDetails = await WeatherForecastDetailsRepository()
+//       .getWeatherForecastDetails(latCoord, lonCoord);
+//   setState(() {});
+// }
 }
 
 class BackgroundWidget extends StatelessWidget {
@@ -165,7 +167,6 @@ class DetailsInfoWidget extends StatelessWidget {
 
   final CityCoordinate cityCoordinate;
   final WeatherForecastDetails? weatherForecastDetails;
-  // final double latCoord;
 
   @override
   Widget build(BuildContext context) {
@@ -187,8 +188,7 @@ class DetailsInfoWidget extends StatelessWidget {
     final cityName = modelCityCoordinate.name.toString();
     final countryName = modelCityCoordinate.country.toString().toUpperCase();
 
-    // final latCoord = modelCityCoordinate.lat;
-    // final lonCoord = modelCityCoordinate.lon;
+
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -198,7 +198,10 @@ class DetailsInfoWidget extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const DetailsScreen()),
+              MaterialPageRoute(
+                builder: (context) => DetailsScreen(
+                    weatherForecastDetails: weatherForecastDetails!),
+              ),
             );
           },
           style: ElevatedButton.styleFrom(
@@ -238,7 +241,7 @@ class DetailsInfoWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-          // '$latCoord',
+                // '$latCoord',
                 'H: $tempMaxRound\u00B0',
                 style: AppTextStyle.defaultSemiBoldLargeTitle
                     .copyWith(color: Colors.white),
@@ -254,8 +257,6 @@ class DetailsInfoWidget extends StatelessWidget {
       ],
     );
   }
-
-
 }
 
 class _CityPage extends StatelessWidget {
