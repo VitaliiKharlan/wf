@@ -370,7 +370,7 @@ class _Ten extends StatelessWidget {
                         Row(
                           children: [
                             SvgPicture.asset(
-                              'assets/svg/uv_index_2.svg',
+                              'assets/svg/uv_index.svg',
                               height: 24,
                               width: 24,
                               colorFilter: ColorFilter.mode(

@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'air_quality_components_widget.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_style.dart';
 import '../../../repositories/weather_details/models/air_pollution_details.dart';
@@ -43,9 +42,8 @@ class _AirQualityDetailsWidgetState extends State<AirQualityDetailsWidget> {
     final airQualityIndex =
         modelAirPollutionDetails?.list.first.main.aqi.toString();
 
-
     final style = ButtonStyle(
-      backgroundColor: MaterialStateProperty.all(Colors.white),
+      backgroundColor: MaterialStateProperty.all(Colors.transparent),
       foregroundColor: MaterialStateProperty.all(Colors.black),
       overlayColor: MaterialStateProperty.all(Colors.green),
       shadowColor: MaterialStateProperty.all(Colors.blue),
@@ -152,9 +150,9 @@ class _AirQualityDetailsWidgetState extends State<AirQualityDetailsWidget> {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   )
-                                : (airQualityIndex == '3')
+                                : (airQualityIndex == '2')
                                     ? Text(
-                                        'Moderate',
+                                        'Fair',
                                         style: AppTextStyle.defaultTextDarkBold
                                             .copyWith(
                                           fontSize: 28,
@@ -163,9 +161,9 @@ class _AirQualityDetailsWidgetState extends State<AirQualityDetailsWidget> {
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       )
-                                    : (airQualityIndex == '2')
+                                    : (airQualityIndex == '3')
                                         ? Text(
-                                            'Unhealthy \nfor Sensitive Groups',
+                                            'Moderate',
                                             style: AppTextStyle
                                                 .defaultTextDarkBold
                                                 .copyWith(
@@ -178,7 +176,7 @@ class _AirQualityDetailsWidgetState extends State<AirQualityDetailsWidget> {
                                           )
                                         : (airQualityIndex == '4')
                                             ? Text(
-                                                'Unhealthy',
+                                                'Poor',
                                                 style: AppTextStyle
                                                     .defaultTextDarkBold
                                                     .copyWith(
@@ -190,7 +188,7 @@ class _AirQualityDetailsWidgetState extends State<AirQualityDetailsWidget> {
                                                 overflow: TextOverflow.ellipsis,
                                               )
                                             : Text(
-                                                'Very Unhealthy',
+                                                'Very Poor',
                                                 style: AppTextStyle
                                                     .defaultTextDarkBold
                                                     .copyWith(
@@ -225,7 +223,18 @@ class _AirQualityDetailsWidgetState extends State<AirQualityDetailsWidget> {
                             const SizedBox(width: 192),
                             ElevatedButton(
                               style: style,
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        AirQualityComponentsWidget(
+                                      airPollutionDetails:
+                                          widget.airPollutionDetails,
+                                    ),
+                                  ),
+                                );
+                              },
                               child: const Icon(Icons.chevron_right),
                             ),
                             // Icon(Icons.add),
