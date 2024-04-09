@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:weather_forecast/repositories/weather_details/models/city_coordinate.dart';
-import 'package:weather_forecast/repositories/weather_details/city_coordinate_repository.dart';
+import '../../repositories/weather_details/models/city_coordinate.dart';
+import '../../repositories/weather_details/city_coordinate_repository.dart';
 
 class CityController extends ChangeNotifier {
   final List<CityCoordinate> cities = [];

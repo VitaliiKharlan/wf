@@ -7,8 +7,8 @@ const _appID = 'appid=';
 const _apiKey = '4dbe24134496b55a1b13855ddf7c5847';
 
 // // Kyiv
-const latCoord = 50.4500336;
-const lonCoord = 30.5241361;
+// const latCoord = 50.4500336;
+// const lonCoord = 30.5241361;
 
 // Lviv
 // const lat = 'lat=49.841952&';
