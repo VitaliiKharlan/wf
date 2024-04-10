@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:weather_forecast/features/theme/app_colors.dart';
-import 'package:weather_forecast/features/theme/app_text_style.dart';
-import 'package:weather_forecast/repositories/weather_details/models/air_pollution_details.dart';
+import '../../theme/app_colors.dart';
+import '../../theme/app_text_style.dart';
+import '../../../repositories/weather_details/models/air_pollution_details.dart';
 
 class AirQualityComponentsWidget extends StatelessWidget {
   final AirPollutionDetails? airPollutionDetails;
@@ -12,16 +12,17 @@ class AirQualityComponentsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final airPollutionModel = airPollutionDetails;
+    final modelAirPollutionModel = airPollutionDetails;
 
-    final co = airPollutionModel?.list.first.components.co.toString();
-    final no = airPollutionModel?.list.first.components.no.toString();
-    final no2 = airPollutionModel?.list.first.components.no2.toString();
-    final o3 = airPollutionModel?.list.first.components.o3.toString();
-    final so2 = airPollutionModel?.list.first.components.so2.toString();
-    final pm2_5 = airPollutionModel?.list.first.components.pm2_5.toString();
-    final pm10 = airPollutionModel?.list.first.components.pm10.toString();
-    final nh3 = airPollutionModel?.list.first.components.nh3.toString();
+    final co = modelAirPollutionModel?.list.first.components.co.toString();
+    final no = modelAirPollutionModel?.list.first.components.no.toString();
+    final no2 = modelAirPollutionModel?.list.first.components.no2.toString();
+    final o3 = modelAirPollutionModel?.list.first.components.o3.toString();
+    final so2 = modelAirPollutionModel?.list.first.components.so2.toString();
+    final pm2_5 =
+        modelAirPollutionModel?.list.first.components.pm2_5.toString();
+    final pm10 = modelAirPollutionModel?.list.first.components.pm10.toString();
+    final nh3 = modelAirPollutionModel?.list.first.components.nh3.toString();
 
     final style = TextStyle(
       color: Colors.white.withOpacity(0.72),

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
-import 'package:weather_forecast/features/air_pollution/air_pollution_controller.dart';
-import 'package:weather_forecast/features/coord/coord_controller.dart';
-import 'package:weather_forecast/repositories/weather_details/models/air_pollution_details.dart';
 
-import '../../city/city_controller.dart';
+import 'package:weather_forecast/features/controllers/air_pollution/air_pollution_controller.dart';
+import 'package:weather_forecast/features/controllers/city/city_controller.dart';
+import 'package:weather_forecast/features/controllers/coord/coord_controller.dart';
+import 'package:weather_forecast/features/controllers/hourly_forecast/hourly_forecast_controller.dart';
+
+import 'package:weather_forecast/repositories/weather_details/models/air_pollution_details.dart';
+import 'package:weather_forecast/repositories/weather_details/models/weather_forecast_hourly_details.dart';
+
 import '../../details/view/details_screen.dart';
 import 'nav_bar_model.dart';
 import 'nav_bar.dart';
@@ -38,6 +42,7 @@ class _MainScreenState extends State<MainScreen> {
   List<CityCoordinate>? cities = [];
   List<WeatherForecastDetails>? weatherForecastDetails;
   List<AirPollutionDetails>? airPollutionDetails;
+  List<WeatherForecastHourlyDetails>? weatherForecastHourlyDetails;
 
   @override
   void initState() {
@@ -66,6 +71,15 @@ class _MainScreenState extends State<MainScreen> {
       });
     });
 
+    final hourlyWeatherForecastController = HourlyForecastController();
+    hourlyWeatherForecastController.init();
+    hourlyWeatherForecastController.addListener(() {
+      setState(() {
+        weatherForecastHourlyDetails =
+            hourlyWeatherForecastController.weatherForecastHourlyDetails;
+      });
+    });
+
     items = [
       NavBarModel(
         page: const TabPage(tab: 1),
@@ -80,11 +94,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //
-    // final modelCityCoordinate = cities;
-    // final latCoord = modelCityCoordinate?.first.lat;
-    // final lonCoord = modelCityCoordinate?.first.lon;
-    //
+
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
@@ -130,6 +140,7 @@ class _MainScreenState extends State<MainScreen> {
             cityCoordinates: cities?[index],
             weatherForecastDetails: weatherForecastDetails?[index],
             airPollutionDetails: airPollutionDetails?[index],
+            weatherForecastHourlyDetails: weatherForecastHourlyDetails?[index],
           );
         },
         itemCount: cities?.length,
@@ -137,11 +148,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-// Future<void> _loadWeatherForecastDetails() async {
-//   weatherForecastDetails = await WeatherForecastDetailsRepository()
-//       .getWeatherForecastDetails(latCoord, lonCoord);
-//   setState(() {});
-// }
+
 }
 
 class BackgroundWidget extends StatelessWidget {
@@ -177,33 +184,41 @@ class DetailsInfoWidget extends StatelessWidget {
     required this.cityCoordinate,
     required this.weatherForecastDetails,
     required this.airPollutionDetails,
+    required this.weatherForecastHourlyDetails,
   });
 
   final CityCoordinate cityCoordinate;
   final WeatherForecastDetails? weatherForecastDetails;
   final AirPollutionDetails? airPollutionDetails;
+  final WeatherForecastHourlyDetails? weatherForecastHourlyDetails;
 
   @override
   Widget build(BuildContext context) {
-    final modelWeatherDetail = weatherForecastDetails;
-    final currentTemp = modelWeatherDetail?.main.temp;
+    final modelWeatherForecastDetails = weatherForecastDetails;
+    final currentTemp = modelWeatherForecastDetails?.main.temp;
     final currentTempRound = currentTemp?.toStringAsFixed(0).toString();
 
     final description =
-        modelWeatherDetail?.weather.first.description.toString();
+        modelWeatherForecastDetails?.weather.first.description.toString();
     final descriptionFirstUp = toBeginningOfSentenceCase('$description');
 
-    final tempMax = modelWeatherDetail?.main.tempMax;
+    final tempMax = modelWeatherForecastDetails?.main.tempMax;
     final tempMaxRound = tempMax?.toStringAsFixed(0).toString();
 
-    final tempMin = modelWeatherDetail?.main.tempMin;
+    final tempMin = modelWeatherForecastDetails?.main.tempMin;
     final tempMinRound = tempMin?.toStringAsFixed(0).toString();
 
     final modelCityCoordinate = cityCoordinate;
     final cityName = modelCityCoordinate.name.toString();
     final countryName = modelCityCoordinate.country.toString().toUpperCase();
 
-    final aaa = airPollutionDetails?.list.first.components.co.toString();
+    final modelAirPollutionDetails = airPollutionDetails;
+    final concentrationOfCO =
+        modelAirPollutionDetails?.list.first.components.co.toString();
+
+    final modelWeatherForecastHourlyDetails = weatherForecastHourlyDetails;
+    final seaLevel =
+        modelWeatherForecastHourlyDetails?.list.first.main.seaLevel.toString();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -217,7 +232,7 @@ class DetailsInfoWidget extends StatelessWidget {
                 builder: (context) => DetailsScreen(
                   weatherForecastDetails: weatherForecastDetails!,
                   airPollutionDetails: airPollutionDetails!,
-
+                  weatherForecastHourlyDetails: weatherForecastHourlyDetails!,
                 ),
               ),
             );
@@ -272,26 +287,46 @@ class DetailsInfoWidget extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 12),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 120),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text(
-                // '$latCoord',
-                '$aaa',
-                style: AppTextStyle.defaultSemiBoldLargeTitle
-                    .copyWith(color: Colors.white),
-              ),
-              Text(
-                'L: $tempMinRound\u00B0',
-                style: AppTextStyle.defaultSemiBoldLargeTitle
-                    .copyWith(color: Colors.white),
-              ),
-            ],
-          ),
-        ),
+        // const SizedBox(height: 12),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 120),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //     children: [
+        //       Text(
+        //         // '$latCoord',
+        //         '$concentrationOfCO',
+        //         style: AppTextStyle.defaultSemiBoldLargeTitle
+        //             .copyWith(color: Colors.white),
+        //       ),
+        //       Text(
+        //         'L: $tempMinRound\u00B0',
+        //         style: AppTextStyle.defaultSemiBoldLargeTitle
+        //             .copyWith(color: Colors.white),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        // const SizedBox(height: 12),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 120),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //     children: [
+        //       Text(
+        //         // '$latCoord',
+        //         '$seaLevel',
+        //         style: AppTextStyle.defaultSemiBoldLargeTitle
+        //             .copyWith(color: Colors.white),
+        //       ),
+        //       Text(
+        //         'L: $tempMinRound\u00B0',
+        //         style: AppTextStyle.defaultSemiBoldLargeTitle
+        //             .copyWith(color: Colors.white),
+        //       ),
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }
@@ -301,11 +336,13 @@ class _CityPage extends StatelessWidget {
   final CityCoordinate? cityCoordinates;
   final WeatherForecastDetails? weatherForecastDetails;
   final AirPollutionDetails? airPollutionDetails;
+  final WeatherForecastHourlyDetails? weatherForecastHourlyDetails;
 
   const _CityPage({
     required this.cityCoordinates,
     required this.weatherForecastDetails,
     required this.airPollutionDetails,
+    required this.weatherForecastHourlyDetails,
   });
 
   @override
@@ -320,6 +357,7 @@ class _CityPage extends StatelessWidget {
                 cityCoordinate: cityCoordinates!,
                 weatherForecastDetails: weatherForecastDetails,
                 airPollutionDetails: airPollutionDetails,
+                weatherForecastHourlyDetails: weatherForecastHourlyDetails,
               ),
             ],
           );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import '../../../repositories/weather_details/models/weather_forecast_details.dart';
 import '../../theme/app_text_style.dart';
 
@@ -13,15 +14,16 @@ class MainDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final modelWeatherDetails = weatherForecastDetails;
+    final modelWeatherForecastDetails = weatherForecastDetails;
 
-    final cityName = modelWeatherDetails?.name.toString();
+    final cityName = modelWeatherForecastDetails?.name.toString();
+    final country = modelWeatherForecastDetails?.sys.country.toString();
 
-    final temp = modelWeatherDetails?.main.temp;
+    final temp = modelWeatherForecastDetails?.main.temp;
     final tempRound = temp?.toStringAsFixed(0).toString();
 
     final description =
-        modelWeatherDetails?.weather.first.description.toString();
+        modelWeatherForecastDetails?.weather.first.description.toString();
     final descriptionFirstUp = toBeginningOfSentenceCase('$description');
 
     return Center(
@@ -30,7 +32,7 @@ class MainDetailsWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            '$cityName',
+            '$cityName, $country',
             // 'Montreal',
             style: AppTextStyle.defaultRegularLargeTitle
                 .copyWith(color: Colors.white),
@@ -45,7 +47,6 @@ class MainDetailsWidget extends StatelessWidget {
                     .copyWith(color: Colors.white24),
                 maxLines: 1,
               ),
-
               Text(
                 ' | ',
                 style: AppTextStyle.defaultSemiBoldTitle3

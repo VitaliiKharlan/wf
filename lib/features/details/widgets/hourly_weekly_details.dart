@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:weather_forecast/features/theme/app.images.dart';
-import 'package:weather_forecast/features/theme/app_colors.dart';
-import 'package:weather_forecast/features/theme/app_text_style.dart';
-import 'package:weather_forecast/repositories/weather_details/models/weather_forecast_details.dart';
+import 'package:intl/intl.dart';
+
+import '../../theme/app.images.dart';
+import '../../theme/app_colors.dart';
+import '../../theme/app_text_style.dart';
+import '../../../repositories/weather_details/models/weather_forecast_details.dart';
+import '../../../repositories/weather_details/models/weather_forecast_hourly_details.dart';
 
 class HourlyWeeklyDetailsWidget extends StatelessWidget {
   final WeatherForecastDetails? weatherForecastDetails;
+  final WeatherForecastHourlyDetails? weatherForecastHourlyDetails;
 
   const HourlyWeeklyDetailsWidget({
     super.key,
     required this.weatherForecastDetails,
+    required this.weatherForecastHourlyDetails,
   });
 
   @override
@@ -49,7 +54,10 @@ class HourlyWeeklyDetailsWidget extends StatelessWidget {
               ),
             ],
           ),
-          _HourlyForecastWidget(weatherForecastDetails: weatherForecastDetails),
+          _HourlyForecastWidget(
+            weatherForecastDetails: weatherForecastDetails,
+            weatherForecastHourlyDetails: weatherForecastHourlyDetails,
+          ),
         ],
       ),
     );
@@ -58,9 +66,11 @@ class HourlyWeeklyDetailsWidget extends StatelessWidget {
 
 class _HourlyForecastWidget extends StatelessWidget {
   final WeatherForecastDetails? weatherForecastDetails;
+  final WeatherForecastHourlyDetails? weatherForecastHourlyDetails;
 
   const _HourlyForecastWidget({
     required this.weatherForecastDetails,
+    required this.weatherForecastHourlyDetails,
   });
 
   @override
@@ -68,8 +78,7 @@ class _HourlyForecastWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: SizedBox(
-        height: 180,
-        // width: 540,
+        height: 200,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           shrinkWrap: true,
@@ -77,7 +86,10 @@ class _HourlyForecastWidget extends StatelessWidget {
           itemExtent: 72,
           itemBuilder: (BuildContext context, int index) {
             return _HourlyForecastItemWidget(
-                weatherForecastDetails: weatherForecastDetails);
+              weatherForecastDetails: weatherForecastDetails,
+              weatherForecastHourlyDetails: weatherForecastHourlyDetails,
+              timeIndex: index,
+            );
           },
         ),
       ),
@@ -87,25 +99,42 @@ class _HourlyForecastWidget extends StatelessWidget {
 
 class _HourlyForecastItemWidget extends StatelessWidget {
   final WeatherForecastDetails? weatherForecastDetails;
+  final WeatherForecastHourlyDetails? weatherForecastHourlyDetails;
+  final int timeIndex;
 
   const _HourlyForecastItemWidget({
     required this.weatherForecastDetails,
+    required this.weatherForecastHourlyDetails,
+    required this.timeIndex,
   });
 
   @override
   Widget build(BuildContext context) {
-    final modelWeatherDetails = weatherForecastDetails;
+    final modelWeatherForecastHourlyDetails = weatherForecastHourlyDetails;
+    final hourTimeFormatter = DateFormat('j');
+    final dateTimeFormatter = DateFormat('dd.MM');
+    final offset = modelWeatherForecastHourlyDetails?.city.timezone ?? 0;
+    final timeItem = modelWeatherForecastHourlyDetails?.list[timeIndex].dt ?? 0;
+    final timeItemToMilliseconds = (timeItem + offset) * 1000;
+    DateTime time = DateTime.fromMillisecondsSinceEpoch(timeItemToMilliseconds);
+    final outputDateItem = dateTimeFormatter.format(time).toString();
+    final outputTimeItem = hourTimeFormatter.format(time).toString();
 
-    final temp = modelWeatherDetails?.main.temp;
+    final clouds = modelWeatherForecastHourlyDetails?.list[timeIndex].clouds.all
+        .toString();
+
+    final temp = modelWeatherForecastHourlyDetails?.list[timeIndex].main.temp;
     final tempRound = temp?.toStringAsFixed(0).toString();
 
-    final clouds = modelWeatherDetails?.clouds.all.toString();
-
-    final weatherIcon = modelWeatherDetails?.weather.first.icon.toString();
-    // if (weatherIcon == '02n') return const SizedBox.shrink();
+    final weatherIcon = modelWeatherForecastHourlyDetails
+        ?.list[timeIndex].weather.first.icon
+        .toString();
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(
+        left: 12,
+        top: 8,
+      ),
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: AppColors.solidDarkHourlyButtonShort1.withOpacity(0.2),
@@ -128,9 +157,15 @@ class _HourlyForecastItemWidget extends StatelessWidget {
             children: [
               const SizedBox(height: 16),
               Text(
-                '12 AM',
+                outputDateItem,
                 style: AppTextStyle.defaultTextDarkRegular
-                    .copyWith(color: Colors.white),
+                    .copyWith(color: Colors.white, fontSize: 14),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                outputTimeItem,
+                style: AppTextStyle.defaultTextDarkRegular
+                    .copyWith(color: Colors.white, fontSize: 14),
               ),
               const SizedBox(height: 20),
               (weatherIcon == '01n')
