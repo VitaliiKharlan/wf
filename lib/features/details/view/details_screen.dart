@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../repositories/weather_details/models/weather_forecast_hourly_details.dart';
 import '../../../repositories/weather_details/models/air_pollution_details.dart';
 import '../../../repositories/weather_details/models/weather_forecast_details.dart';
+import '../../../repositories/weather_details/models/weather_forecast_hourly_details.dart';
 import '../widgets/air_quality_details_widget.dart';
 import '../widgets/hourly_weekly_details.dart';
 import '../widgets/main_details_widget.dart';
